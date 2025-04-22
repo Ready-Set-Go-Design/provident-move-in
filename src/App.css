@@ -1,13 +1,13 @@
 @layer theme, base, components, utilities;
 
 
-/* @import "tailwindcss/theme.css" layer(theme) prefix(pf);
+@import "tailwindcss/theme.css" layer(theme) prefix(pf);
 @import "tailwindcss/preflight.css" layer(base) prefix(pf);
-@import "tailwindcss/utilities.css" prefix(pf); */
+@import "tailwindcss/utilities.css" prefix(pf);
 
-@import "tailwindcss/theme.css" layer(theme);
+/* @import "tailwindcss/theme.css" layer(theme);
 @import "tailwindcss/preflight.css" layer(base);
-@import "tailwindcss/utilities.css";
+@import "tailwindcss/utilities.css"; */
 /* @import "tailwindcss" prefix(pf); */
 
 
