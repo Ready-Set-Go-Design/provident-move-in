@@ -1,6 +1,6 @@
 import clsx from "clsx";
 
-export const prefix = "pf";
+export const prefix = "";
 
 export const withPrefix = (...inputs: clsx.ClassValue[]): string => {
   return clsx(...inputs)
