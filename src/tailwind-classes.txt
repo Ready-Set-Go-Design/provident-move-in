@@ -293,8 +293,6 @@ pf:customerFormData
 pf:BUILDING
 pf:UNIT
 pf:address/searchAddressesAsync
-pf:`${process.env.API_URL}/addresses/find-buildings`
-pf:`${process.env.API_URL}/addresses/find-units`
 pf:as
 pf:className
 pf:control

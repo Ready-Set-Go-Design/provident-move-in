@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build --base=https://ready-set-go-design.github.io/provident-test/dist/",
+    "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview",
     "start": "serve -s dist"
