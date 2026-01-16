@@ -9,12 +9,13 @@ import ReactPDF from "@react-pdf/renderer";
 import { withPrefix } from "./utils/withPrefix";
 import PDFTemplate from "./PDFTemplate";
 import { Button } from "./components/button";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { submitForm } from "./utils/submitForm";
 
 function FormPage9() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const hasSubmitted = useRef(false);
   const formData = useSelector((state: RootState) => state.form);
   const submissionData = useSelector((state: RootState) => state.submission);
 
@@ -22,8 +23,9 @@ function FormPage9() {
 
   useEffect(() => {
     // submit form
-    if (!submitted && formData) {
+    if (!submitted && formData && !hasSubmitted.current) {
       doSubmitForm();
+      hasSubmitted.current = true;
     }
   }, [submitted, formData]);
 

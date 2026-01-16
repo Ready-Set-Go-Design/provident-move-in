@@ -1,15 +1,19 @@
 export const submitForm = async (formData: any) => {
+  console.log((import.meta as any).VITE_API_URL);
   try {
     const sanitizedForm = { ...formData };
     // Remove any fields that are not needed for submission
     delete sanitizedForm.error;
-    const response = await fetch("http://localhost:3002/move-in-submission", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(sanitizedForm),
-    });
+    const response = await fetch(
+      `${(import.meta as any).env.VITE_API_URL}/submissions/move-in`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(sanitizedForm),
+      }
+    );
 
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);

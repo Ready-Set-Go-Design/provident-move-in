@@ -250,7 +250,7 @@ function AddressSearch() {
                   <TableCell>
                     <Input
                       type="text"
-                      placeholder=""
+                      placeholder="Enter Unit or Suite Number"
                       value={unitQuery}
                       onChange={(e) => searchForUnits(e.target.value)}
                     />

@@ -143,7 +143,7 @@ function FormPage1() {
             }}
             invalid={showValidationError && formData.occupancy_day === ""}
           >
-            <option value="">Select Day</option>
+            <option value="">Day</option>
             {Array.from({ length: 31 }, (_, i) => (
               <option key={i + 1} value={i + 1}>
                 {i + 1}
@@ -159,7 +159,7 @@ function FormPage1() {
             }}
             invalid={showValidationError && formData.occupancy_month === ""}
           >
-            <option value="">Select Month</option>
+            <option value="">Month</option>
             {Array.from({ length: 12 }, (_, i) => (
               <option key={i + 1} value={i + 1}>
                 {new Date(0, i).toLocaleString("default", {
@@ -177,7 +177,7 @@ function FormPage1() {
             }}
             invalid={showValidationError && formData.occupancy_year === ""}
           >
-            <option value="">Select Year</option>
+            <option value="">Year</option>
             {Array.from({ length: 5 }, (_, i) => (
               <option key={i + 2025} value={i + 2025}>
                 {i + 2025}
