@@ -11,6 +11,7 @@ import PDFTemplate from "./PDFTemplate";
 import { Button } from "./components/button";
 import { useEffect, useRef } from "react";
 import { submitForm } from "./utils/submitForm";
+import { FooterWrapper } from "./components/FooterWrapper";
 
 function FormPage9() {
   const dispatch = useDispatch();
@@ -62,7 +63,7 @@ function FormPage9() {
           </div>
         </div>
         <div className={withPrefix("mt-8 flex")}>
-          <div>
+          <FooterWrapper>
             <NavButton
               outline={true}
               action={() => {
@@ -73,7 +74,7 @@ function FormPage9() {
               label={"Return to Homepage"}
               currentPage=""
             />
-          </div>
+          </FooterWrapper>
         </div>
       </div>
     );
@@ -92,12 +93,11 @@ function FormPage9() {
           <strong>{formData.email}</strong>.
         </div>
       </div>
-
       <div className={withPrefix("flex gap-2 mt-8")}>
         <Button
           onClick={async () => {
             const blob = await ReactPDF.pdf(
-              <PDFTemplate formData={formData} />
+              <PDFTemplate formData={formData} />,
             ).toBlob();
             const url = URL.createObjectURL(blob);
             const link = document.createElement("a");
@@ -109,6 +109,8 @@ function FormPage9() {
         >
           Download PDF
         </Button>
+      </div>
+      <FooterWrapper>
         <NavButton
           outline={true}
           action={() => {
@@ -119,7 +121,7 @@ function FormPage9() {
           label={"Return to Homepage"}
           currentPage=""
         />
-      </div>
+      </FooterWrapper>
     </div>
   );
 }

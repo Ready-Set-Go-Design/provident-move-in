@@ -9,6 +9,7 @@ import { AllFieldsRequiredMessage } from "./components/AllFieldsRequiredMessage"
 import { useState } from "react";
 import { Input } from "./components/input";
 import { Checkbox, CheckboxField } from "./components/checkbox";
+import { FooterWrapper } from "./components/FooterWrapper";
 
 function FormPage6() {
   const dispatch = useDispatch();
@@ -52,7 +53,7 @@ function FormPage6() {
             "border-1 rounded-md pf:overflow-hidden p-2 mt-4",
             showValidationError && formData.accept_terms_and_conditions === ""
               ? "border-red-500"
-              : "border-transparent"
+              : "border-transparent",
           )}
         >
           <Checkbox
@@ -65,7 +66,7 @@ function FormPage6() {
                 updateField({
                   field: "accept_terms_and_conditions",
                   value: checked ? "true" : "",
-                })
+                }),
               );
             }}
           />{" "}
@@ -75,18 +76,20 @@ function FormPage6() {
 
       <div className={withPrefix("mt-4")}>
         <AllFieldsRequiredMessage show={showValidationError} id="/page6" />
-        <NavButton
-          label="Save and Continue"
-          action={() => {
-            if (pageIsValid) {
-              navigate(from ? `/form_${from}` : "/form_page7");
-            } else {
-              setShowValidationError(true);
-            }
-          }}
-          currentPage="page6"
-          disabledButClickable={!pageIsValid}
-        />
+        <FooterWrapper>
+          <NavButton
+            label="Save and Continue"
+            action={() => {
+              if (pageIsValid) {
+                navigate(from ? `/form_${from}` : "/form_page7");
+              } else {
+                setShowValidationError(true);
+              }
+            }}
+            currentPage="page6"
+            disabledButClickable={!pageIsValid}
+          />
+        </FooterWrapper>
       </div>
     </div>
   );

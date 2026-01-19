@@ -8,6 +8,7 @@ import { AllFieldsRequiredMessage } from "./components/AllFieldsRequiredMessage"
 import { useState } from "react";
 import humanizeString from "./utils/humanizeFieldName";
 import { Button } from "./components/button";
+import { FooterWrapper } from "./components/FooterWrapper";
 
 function FormPage6() {
   const navigate = useNavigate();
@@ -153,17 +154,19 @@ function FormPage6() {
 
       <div className={withPrefix("mt-4")}>
         <AllFieldsRequiredMessage show={showValidationError} id="/page7" />
-        <NavButton
-          label="Save and Continue"
-          action={() => {
-            if (pageIsValid) {
-              navigate("/form_page8");
-            } else {
-              setShowValidationError(true);
-            }
-          }}
-          currentPage="page7"
-        />
+        <FooterWrapper>
+          <NavButton
+            label="Save and Continue"
+            action={() => {
+              if (pageIsValid) {
+                navigate("/form_page8");
+              } else {
+                setShowValidationError(true);
+              }
+            }}
+            currentPage="page7"
+          />
+        </FooterWrapper>
       </div>
     </div>
   );

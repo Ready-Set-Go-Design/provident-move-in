@@ -16,7 +16,7 @@
 }
 
 :root {
-  --primary-color: oklch(62.7% 0.194 149.214);
+  --primary-color: #26aae1;
   --provident-white: #ffffff;
   --stepper-bg: #fafafa;
   --stepper-selected: var(--primary-color);

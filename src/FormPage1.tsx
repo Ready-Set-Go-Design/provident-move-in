@@ -10,6 +10,7 @@ import { isPageValid } from "./utils/isPageValid";
 import { useState } from "react";
 import { AllFieldsRequiredMessage } from "./components/AllFieldsRequiredMessage";
 import { validateForm } from "./utils/validateForm";
+import { FooterWrapper } from "./components/FooterWrapper";
 
 const ServiceType = ({
   label,
@@ -32,7 +33,7 @@ const ServiceType = ({
   return (
     <div
       className={withPrefix(
-        "bg-gray-100 p-2 relative rounded-lg cursor-pointer hover:bg-gray-300 w-full border border-gray-400 flex flex-col items-center "
+        "bg-gray-100 p-2 relative rounded-lg cursor-pointer hover:bg-gray-300 w-full border border-gray-400 flex flex-col items-center ",
       )}
       onClick={setServiceType}
     >
@@ -47,7 +48,7 @@ const ServiceType = ({
       ></div>
       <div
         className={withPrefix(
-          `h-[56px] w-[56px] fill-(--primary-color) mt-2 mb-4 `
+          `h-[56px] w-[56px] fill-(--primary-color) mt-2 mb-4 `,
         )}
       >
         {icon}
@@ -69,7 +70,7 @@ function FormPage1() {
 
   const pageIsValid = isPageValid("/");
   const validatedForm = validateForm(formData).find(
-    (requirement: any) => requirement.id === "/"
+    (requirement: any) => requirement.id === "/",
   );
 
   return (
@@ -90,7 +91,7 @@ function FormPage1() {
           "inline-flex gap-2 w-full rounded-md pf:overflow-hidden border-1",
           showValidationError && formData.occupancy_type === ""
             ? "border-red-500"
-            : "border-transparent"
+            : "border-transparent",
         )}
       >
         <ServiceType
@@ -138,7 +139,7 @@ function FormPage1() {
             value={formData.occupancy_day}
             onChange={(e) => {
               dispatch(
-                updateField({ field: "occupancy_day", value: e.target.value })
+                updateField({ field: "occupancy_day", value: e.target.value }),
               );
             }}
             invalid={showValidationError && formData.occupancy_day === ""}
@@ -154,7 +155,10 @@ function FormPage1() {
             value={formData.occupancy_month}
             onChange={(e) => {
               dispatch(
-                updateField({ field: "occupancy_month", value: e.target.value })
+                updateField({
+                  field: "occupancy_month",
+                  value: e.target.value,
+                }),
               );
             }}
             invalid={showValidationError && formData.occupancy_month === ""}
@@ -172,7 +176,7 @@ function FormPage1() {
             value={formData.occupancy_year}
             onChange={(e) => {
               dispatch(
-                updateField({ field: "occupancy_year", value: e.target.value })
+                updateField({ field: "occupancy_year", value: e.target.value }),
               );
             }}
             invalid={showValidationError && formData.occupancy_year === ""}
@@ -189,19 +193,20 @@ function FormPage1() {
 
       <div className={withPrefix("mt-4")}>
         <AllFieldsRequiredMessage show={showValidationError} id="/" />
-
-        <NavButton
-          label="Save and Continue"
-          action={() => {
-            if (pageIsValid) {
-              navigate(from ? `/form_${from}` : "/form_page2");
-            } else {
-              setShowValidationError(true);
-            }
-          }}
-          currentPage="page1"
-          disabledButClickable={!validatedForm.valid}
-        />
+        <FooterWrapper>
+          <NavButton
+            label="Save and Continue"
+            action={() => {
+              if (pageIsValid) {
+                navigate(from ? `/form_${from}` : "/form_page2");
+              } else {
+                setShowValidationError(true);
+              }
+            }}
+            currentPage="page1"
+            disabledButClickable={!validatedForm.valid}
+          />
+        </FooterWrapper>
       </div>
     </div>
   );

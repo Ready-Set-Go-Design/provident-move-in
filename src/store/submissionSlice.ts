@@ -30,7 +30,7 @@ const submissionSlice = createSlice({
       action: PayloadAction<{
         field: keyof SubmissionState;
         value: string | boolean;
-      }>
+      }>,
     ) => {
       const { field, value } = action.payload;
       if (field !== "pageVisited") {
@@ -43,13 +43,10 @@ const submissionSlice = createSlice({
     clearSubmission: (state) => {
       const emptyFormInstance = Object.assign(
         state,
-        JSON.parse(JSON.stringify(emptySubmission)) as SubmissionState
+        JSON.parse(JSON.stringify(emptySubmission)) as SubmissionState,
       );
       console.log("setting form to empty", emptyFormInstance);
-      localStorage.setItem(
-        "customerFormData",
-        JSON.stringify(emptyFormInstance)
-      );
+      localStorage.setItem("moveInFormData", JSON.stringify(emptyFormInstance));
     },
   },
 });

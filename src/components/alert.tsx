@@ -30,18 +30,18 @@ export function Alert({
       <Headless.DialogBackdrop
         transition
         className={withPrefix(
-          "fixed inset-0 flex w-screen justify-center overflow-y-auto bg-zinc-950/15 px-2 py-2 transition duration-100 focus:outline-0 data-closed:opacity-0 data-enter:ease-out data-leave:ease-in sm:px-6 sm:py-8 lg:px-8 lg:py-16 dark:bg-zinc-950/50"
+          "fixed inset-0 flex w-screen justify-center overflow-y-auto bg-zinc-950/15 px-2 py-2 transition duration-100 focus:outline-0 data-closed:opacity-0 data-enter:ease-out data-leave:ease-in sm:px-6 sm:py-8 lg:px-8 lg:py-16",
         )}
       />
 
       <div
         className={withPrefix(
-          "fixed inset-0 w-screen overflow-y-auto pt-6 sm:pt-0"
+          "fixed inset-0 w-screen overflow-y-auto pt-6 sm:pt-0",
         )}
       >
         <div
           className={withPrefix(
-            "grid min-h-full grid-rows-[1fr_auto_1fr] justify-items-center p-8 sm:grid-rows-[1fr_auto_3fr] sm:p-4"
+            "grid min-h-full grid-rows-[1fr_auto_1fr] justify-items-center p-8 sm:grid-rows-[1fr_auto_3fr] sm:p-4",
           )}
         >
           <Headless.DialogPanel
@@ -49,8 +49,8 @@ export function Alert({
             className={withPrefix(
               className,
               sizes[size],
-              "row-start-2 w-full rounded-2xl bg-white p-8 ring-1 shadow-lg ring-zinc-950/10 sm:rounded-2xl sm:p-6 dark:bg-zinc-900 dark:ring-white/10 forced-colors:outline",
-              "transition duration-100 will-change-transform data-closed:opacity-0 data-enter:ease-out data-closed:data-enter:scale-95 data-leave:ease-in"
+              "row-start-2 w-full rounded-2xl bg-white p-8 ring-1 shadow-lg ring-zinc-950/10 sm:rounded-2xl sm:p-6 forced-colors:outline",
+              "transition duration-100 will-change-transform data-closed:opacity-0 data-enter:ease-out data-closed:data-enter:scale-95 data-leave:ease-in",
             )}
           >
             {children}
@@ -73,7 +73,7 @@ export function AlertTitle({
       {...props}
       className={withPrefix(
         className,
-        "text-center text-base/6 font-semibold text-balance text-zinc-950 sm:text-left sm:text-sm/6 sm:text-wrap dark:text-white"
+        "text-center text-base/6 font-semibold text-balance text-zinc-950 sm:text-left sm:text-sm/6 sm:text-wrap ",
       )}
     />
   );
@@ -92,7 +92,7 @@ export function AlertDescription({
       {...props}
       className={withPrefix(
         className,
-        "mt-2 text-center text-pretty sm:text-left"
+        "mt-2 text-center text-pretty sm:text-left",
       )}
     />
   );
@@ -114,7 +114,7 @@ export function AlertActions({
       {...props}
       className={withPrefix(
         className,
-        "mt-6 flex flex-col-reverse items-center justify-end gap-3 *:w-full sm:mt-4 sm:flex-row sm:*:w-auto"
+        "mt-6 flex flex-col-reverse items-center justify-end gap-3 *:w-full sm:mt-4 sm:flex-row sm:*:w-auto",
       )}
     />
   );

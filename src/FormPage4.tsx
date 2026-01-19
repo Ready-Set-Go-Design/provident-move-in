@@ -11,6 +11,7 @@ import { Checkbox, CheckboxField } from "./components/checkbox";
 import { isPageValid } from "./utils/isPageValid";
 import { AllFieldsRequiredMessage } from "./components/AllFieldsRequiredMessage";
 import { validateForm } from "./utils/validateForm";
+import { FooterWrapper } from "./components/FooterWrapper";
 
 function FormPage4() {
   const dispatch = useDispatch();
@@ -23,7 +24,7 @@ function FormPage4() {
   const urlParams = new URLSearchParams(location.search);
   const from = urlParams.get("from");
   const validatedForm = validateForm(formData).find(
-    (requirement: any) => requirement.id === "/page4"
+    (requirement: any) => requirement.id === "/page4",
   );
 
   return (
@@ -36,7 +37,7 @@ function FormPage4() {
             "border-1 rounded-md pf:overflow-hidden p-2 pt-0",
             showValidationError && formData.payment_mode === ""
               ? "border-red-500"
-              : "border-transparent"
+              : "border-transparent",
           )}
           name="payment_mode"
           defaultValue="provide_banking_information"
@@ -46,7 +47,7 @@ function FormPage4() {
               updateField({
                 field: "payment_mode",
                 value: e,
-              })
+              }),
             );
           }}
         >
@@ -73,7 +74,7 @@ function FormPage4() {
           showValidationError &&
             formData.accept_preauth_terms_and_conditions === ""
             ? "border-red-500"
-            : "border-transparent"
+            : "border-transparent",
         )}
       >
         <Checkbox
@@ -86,7 +87,7 @@ function FormPage4() {
               updateField({
                 field: "accept_preauth_terms_and_conditions",
                 value: checked ? "true" : "",
-              })
+              }),
             );
           }}
         />
@@ -94,7 +95,7 @@ function FormPage4() {
       </CheckboxField>
 
       <AllFieldsRequiredMessage show={showValidationError} id="/page4" />
-      <div className={withPrefix("flex gap-2 mt-4")}>
+      <FooterWrapper>
         <NavButton
           outline={true}
           action={() => {
@@ -102,19 +103,18 @@ function FormPage4() {
               updateField({
                 field: "accept_preauth_terms_and_conditions",
                 value: "",
-              })
+              }),
             );
             dispatch(
               updateField({
                 field: "payment_mode",
                 value: "",
-              })
+              }),
             );
             navigate(from ? `/form_${from}` : "/form_page6");
           }}
           label={"Skip this step"}
         />
-
         <NavButton
           action={() => {
             if (pageIsValid) {
@@ -127,7 +127,7 @@ function FormPage4() {
           currentPage="page4"
           disabledButClickable={!validatedForm.valid}
         />
-      </div>
+      </FooterWrapper>
     </div>
   );
 }

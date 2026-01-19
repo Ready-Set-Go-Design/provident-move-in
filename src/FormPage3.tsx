@@ -10,6 +10,8 @@ import { AllFieldsRequiredMessage } from "./components/AllFieldsRequiredMessage"
 import { useState } from "react";
 import { validateForm } from "./utils/validateForm";
 import { Field, Label } from "./components/fieldset";
+import { WrappedInput } from "./components/WrappedInput";
+import { FooterWrapper } from "./components/FooterWrapper";
 
 function FormPage3() {
   const dispatch = useDispatch();
@@ -19,8 +21,10 @@ function FormPage3() {
     useState<boolean>(false);
   const pageIsValid = isPageValid("/page3");
   const validatedForm = validateForm(formData).find(
-    (requirement: any) => requirement.id === "/page3"
+    (requirement: any) => requirement.id === "/page3",
   );
+  console.log("hi");
+  console.log(validatedForm?.errors.includes("First Name"));
 
   const location = useLocation();
   const urlParams = new URLSearchParams(location.search);
@@ -31,30 +35,50 @@ function FormPage3() {
       <h1 className={withPrefix("py-4 text-2xl")}>Primary Account Holder</h1>
       <Field className={withPrefix("mb-4")}>
         <Label>First Name</Label>
-
-        <Input
-          invalid={showValidationError && formData.first_name === ""}
+        <WrappedInput
+          showSearch={false}
+          invalid={
+            showValidationError && validatedForm?.errors.includes("First Name")
+          }
           type="text"
           name="first_name"
+          placeholder={""}
           value={formData.first_name}
-          onChange={(e) => {
+          onChange={(e: any) => {
             dispatch(
-              updateField({ field: "first_name", value: e.currentTarget.value })
+              updateField({
+                field: "first_name",
+                value: e,
+              }),
             );
+          }}
+          clearAction={(e: any) => {
+            dispatch(updateField({ field: "first_name", value: "" }));
           }}
         />
       </Field>
       <Field className={withPrefix("mb-4")}>
         <Label>Last Name</Label>
-        <Input
-          invalid={showValidationError && formData.last_name === ""}
+
+        <WrappedInput
+          showSearch={false}
+          invalid={
+            showValidationError && validatedForm?.errors.includes("Last Name")
+          }
           type="text"
           name="last_name"
+          placeholder={""}
           value={formData.last_name}
-          onChange={(e) => {
+          onChange={(e: any) => {
             dispatch(
-              updateField({ field: "last_name", value: e.currentTarget.value })
+              updateField({
+                field: "last_name",
+                value: e,
+              }),
             );
+          }}
+          clearAction={(e: any) => {
+            dispatch(updateField({ field: "last_name", value: "" }));
           }}
         />
       </Field>
@@ -62,52 +86,71 @@ function FormPage3() {
       {formData.occupancy_type.toLowerCase() !== "tenant" && (
         <Field className={withPrefix("mb-4")}>
           <Label>Business Name</Label>
-          <Input
-            invalid={showValidationError && formData.business_name === ""}
+          <WrappedInput
+            showSearch={false}
+            invalid={
+              showValidationError &&
+              validatedForm?.errors.includes("Business Name")
+            }
             type="text"
             name="business_name"
+            placeholder={""}
             value={formData.business_name}
-            onChange={(e) => {
+            onChange={(e: any) => {
               dispatch(
                 updateField({
-                  field: "business_name",
-                  value: e.currentTarget.value,
-                })
+                  field: "last_name",
+                  value: e,
+                }),
               );
+            }}
+            clearAction={(e: any) => {
+              dispatch(updateField({ field: "last_name", value: "" }));
             }}
           />
         </Field>
       )}
       <Field className={withPrefix("mb-4")}>
         <Label>Email Address</Label>
-        <Input
+
+        <WrappedInput
+          showSearch={false}
           invalid={
             showValidationError && validatedForm?.errors.includes("Email")
           }
           type="email"
           name="email"
+          placeholder={""}
           value={formData.email}
-          onChange={(e) => {
+          onChange={(e: any) => {
             dispatch(
-              updateField({ field: "email", value: e.currentTarget.value })
+              updateField({
+                field: "email",
+                value: e,
+              }),
             );
+          }}
+          clearAction={(e: any) => {
+            dispatch(updateField({ field: "email", value: "" }));
           }}
         />
       </Field>
       <div className={withPrefix("mt-4")}>
         <AllFieldsRequiredMessage show={showValidationError} id="/page3" />
-        <NavButton
-          label="Save and Continue"
-          action={() => {
-            if (pageIsValid) {
-              navigate(from ? `/form_${from}` : "/form_page4");
-            } else {
-              setShowValidationError(true);
-            }
-          }}
-          currentPage="page3"
-          disabledButClickable={!validatedForm.valid}
-        />
+        <FooterWrapper>
+          <NavButton
+            label="Save and Continue"
+            action={() => {
+              if (pageIsValid) {
+                navigate(from ? `/form_${from}` : "/form_page4");
+              } else {
+                setShowValidationError(true);
+              }
+            }}
+            currentPage="page3"
+            disabledButClickable={!validatedForm.valid}
+          />
+        </FooterWrapper>
       </div>
     </div>
   );

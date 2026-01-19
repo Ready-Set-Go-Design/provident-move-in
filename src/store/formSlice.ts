@@ -50,7 +50,7 @@ export const emptyForm: FormState = {
 };
 
 const getInitialState = (): FormState => {
-  const savedData = localStorage.getItem("customerFormData");
+  const savedData = localStorage.getItem("moveInFormData");
   if (savedData) {
     return JSON.parse(savedData);
   }
@@ -63,30 +63,27 @@ const formSlice = createSlice({
   reducers: {
     updateField: (
       state,
-      action: PayloadAction<{ field: keyof FormState; value: string }>
+      action: PayloadAction<{ field: keyof FormState; value: string }>,
     ) => {
       const { field, value } = action.payload;
       if (field !== "pageVisited") {
         state[field] = value;
       }
       try {
-        localStorage.setItem("customerFormData", JSON.stringify(state));
+        localStorage.setItem("moveInFormData", JSON.stringify(state));
       } catch (error) {}
     },
     clearForm: (state) => {
       const emptyFormInstance = Object.assign(
         state,
-        JSON.parse(JSON.stringify(emptyForm)) as FormState
+        JSON.parse(JSON.stringify(emptyForm)) as FormState,
       );
-      localStorage.setItem(
-        "customerFormData",
-        JSON.stringify(emptyFormInstance)
-      );
+      localStorage.setItem("moveInFormData", JSON.stringify(emptyFormInstance));
     },
     addPageVisit: (state, action: PayloadAction<string>) => {
       if (!state.pageVisited.includes(action.payload)) {
         state.pageVisited.push(action.payload);
-        localStorage.setItem("customerFormData", JSON.stringify(state));
+        localStorage.setItem("moveInFormData", JSON.stringify(state));
       }
     },
   },

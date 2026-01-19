@@ -28,7 +28,7 @@ export function NavbarDivider({
     <div
       aria-hidden="true"
       {...props}
-      className={clsx(className, "h-6 w-px bg-zinc-950/10 dark:bg-white/10")}
+      className={clsx(className, "h-6 w-px bg-zinc-950/10")}
     />
   );
 }
@@ -69,7 +69,7 @@ export const NavbarItem = forwardRef(function NavbarItem(
     | Omit<Headless.ButtonProps, "as" | "className">
     | Omit<React.ComponentPropsWithoutRef<typeof Link>, "className">
   ),
-  ref: React.ForwardedRef<HTMLAnchorElement | HTMLButtonElement>
+  ref: React.ForwardedRef<HTMLAnchorElement | HTMLButtonElement>,
 ) {
   let classes = clsx(
     // Base
@@ -84,10 +84,6 @@ export const NavbarItem = forwardRef(function NavbarItem(
     "data-hover:bg-zinc-950/5 data-hover:*:data-[slot=icon]:fill-zinc-950",
     // Active
     "data-active:bg-zinc-950/5 data-active:*:data-[slot=icon]:fill-zinc-950",
-    // Dark mode
-    "dark:text-white dark:*:data-[slot=icon]:fill-zinc-400",
-    "dark:data-hover:bg-white/5 dark:data-hover:*:data-[slot=icon]:fill-white",
-    "dark:data-active:bg-white/5 dark:data-active:*:data-[slot=icon]:fill-white"
   );
 
   return (
@@ -96,7 +92,7 @@ export const NavbarItem = forwardRef(function NavbarItem(
         <motion.span
           layoutId="current-indicator"
           className={withPrefix(
-            "absolute inset-x-2 -bottom-2.5 h-0.5 rounded-full bg-zinc-950 dark:bg-white"
+            "absolute inset-x-2 -bottom-2.5 h-0.5 rounded-full bg-zinc-950 ",
           )}
         />
       )}
