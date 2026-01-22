@@ -45,7 +45,9 @@ const submissionSlice = createSlice({
         state,
         JSON.parse(JSON.stringify(emptySubmission)) as SubmissionState,
       );
-      console.log("setting form to empty", emptyFormInstance);
+
+      localStorage.removeItem("moveInFormData");
+
       localStorage.setItem("moveInFormData", JSON.stringify(emptyFormInstance));
     },
   },

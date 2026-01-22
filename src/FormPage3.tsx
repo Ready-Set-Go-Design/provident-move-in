@@ -23,8 +23,6 @@ function FormPage3() {
   const validatedForm = validateForm(formData).find(
     (requirement: any) => requirement.id === "/page3",
   );
-  console.log("hi");
-  console.log(validatedForm?.errors.includes("First Name"));
 
   const location = useLocation();
   const urlParams = new URLSearchParams(location.search);
@@ -99,13 +97,13 @@ function FormPage3() {
             onChange={(e: any) => {
               dispatch(
                 updateField({
-                  field: "last_name",
+                  field: "business_name",
                   value: e,
                 }),
               );
             }}
             clearAction={(e: any) => {
-              dispatch(updateField({ field: "last_name", value: "" }));
+              dispatch(updateField({ field: "business_name", value: "" }));
             }}
           />
         </Field>

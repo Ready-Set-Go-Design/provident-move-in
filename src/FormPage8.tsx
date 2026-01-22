@@ -75,7 +75,7 @@ function FormPage8() {
           ref={containerRef as unknown as React.RefObject<HTMLDivElement>}
         >
           <SignatureCanvas
-            penColor="green"
+            penColor="#26aae1"
             canvasProps={{
               width: width,
               height: "200px",

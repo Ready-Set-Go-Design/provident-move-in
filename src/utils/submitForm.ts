@@ -1,5 +1,4 @@
 export const submitForm = async (formData: any) => {
-  console.log((import.meta as any).VITE_API_URL);
   try {
     const sanitizedForm = { ...formData };
     // Remove any fields that are not needed for submission
@@ -12,13 +11,14 @@ export const submitForm = async (formData: any) => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify(sanitizedForm),
-      }
+      },
     );
 
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
 
+    // Handle JSON response (fallback)
     const result = await response.json();
     return result;
   } catch (error) {

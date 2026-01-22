@@ -34,6 +34,8 @@ pf:border
 pf:border-(--stepper-unselected-border)
 pf:row
 pf:A4
+pf:lodash
+pf:submission_id
 pf:submitted
 pf:error
 pf:p-4
@@ -45,8 +47,7 @@ pf:mb-4
 pf:mt-4
 pf:mt-8
 pf:gap-2
-pf:a
-pf:new_customer_form.pdf
+pf:text-(--validation-error-color)
 pf:/page8
 pf:signature_image
 pf:load
@@ -59,13 +60,13 @@ pf:h-full
 pf:min-h-[130px]
 pf:border-red-500
 pf:border-gray-300
-pf:green
 pf:200px
 pf:sigCanvas
 pf:white
 pf:rounded-md
 pf:p-2
 pf:border-transparent
+pf:green
 pf:verify_entered_information
 pf:true
 pf:Submit
@@ -158,7 +159,6 @@ pf:step
 pf:/form_page5
 pf:page4
 pf:/page3
-pf:hi
 pf:First
 pf:Name
 pf:text
@@ -277,6 +277,11 @@ pf:${response.status}`
 pf:Error
 pf:submitting
 pf:form:
+pf:movein
+pf:content-type
+pf:application/pdf
+pf:a
+pf:new_customer_form.pdf
 pf:parse-address-string
 pf:toronto
 pf:mississauga
@@ -296,8 +301,6 @@ pf:STREET_NAME
 pf:STREET_NUMBER
 pf:customerSubmissionData
 pf:form
-pf:setting
-pf:empty
 pf:moveInFormData
 pf:BUILDING
 pf:UNIT
@@ -1405,6 +1408,7 @@ pf:,
 pf:lodash/throttle
 pf:Searching
 pf:units:
+pf:setting
 pf:location
 pf:id
 pf:location_id

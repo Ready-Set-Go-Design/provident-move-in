@@ -24,7 +24,7 @@ import {
   AlertTitle,
 } from "./components/alert";
 import { Button } from "./components/button";
-import { withPrefix } from "./utils/withPrefix";
+
 import { clearSubmission } from "./store/submissionSlice";
 
 function App() {

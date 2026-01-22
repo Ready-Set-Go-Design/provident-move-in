@@ -23,6 +23,7 @@ export interface FormState {
   verify_entered_information?: string;
   signature_image: string;
   location_id: string;
+  submission_id: string;
 }
 
 export const emptyForm: FormState = {
@@ -47,6 +48,7 @@ export const emptyForm: FormState = {
   verify_entered_information: "",
   signature_image: "",
   location_id: "",
+  submission_id: "",
 };
 
 const getInitialState = (): FormState => {
