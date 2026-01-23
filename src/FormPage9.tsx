@@ -84,7 +84,7 @@ function FormPage9() {
                 dispatch(clearSubmission());
                 navigate("/");
               }}
-              label={"Return to Homepage"}
+              label={"Start Over"}
               currentPage=""
             />
           </FooterWrapper>
@@ -140,7 +140,7 @@ function FormPage9() {
             dispatch(clearSubmission());
             navigate("/");
           }}
-          label={"Return to Homepage"}
+          label={"Start Over"}
           currentPage=""
         />
       </FooterWrapper>
