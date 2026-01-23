@@ -45,7 +45,7 @@ function FormPage9() {
         dispatch(
           updateField({
             field: "submission_id",
-            value: submission.submission_id,
+            value: submission.submissionId,
           }),
         );
         dispatch(updateField({ field: "submitted", value: true }));
