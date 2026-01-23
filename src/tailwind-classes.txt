@@ -34,7 +34,6 @@ pf:border
 pf:border-(--stepper-unselected-border)
 pf:row
 pf:A4
-pf:lodash
 pf:submission_id
 pf:submitted
 pf:error
