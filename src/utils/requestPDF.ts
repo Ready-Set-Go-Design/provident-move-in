@@ -25,7 +25,7 @@ export const requestPDF = async (submissionId: string | true | string[]) => {
       const link = document.createElement("a");
       const url = URL.createObjectURL(pdfBlob);
       link.href = url;
-      link.download = "new_customer_form.pdf";
+      link.download = "customer_service_agreement.pdf";
       // Append to body, click, then remove
       document.body.appendChild(link);
       link.click();

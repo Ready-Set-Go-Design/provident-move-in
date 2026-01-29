@@ -13,6 +13,7 @@ import { Field, Label } from "./components/fieldset";
 import { Button } from "./components/button";
 import { FooterWrapper } from "./components/FooterWrapper";
 import { WrappedInput } from "./components/WrappedInput";
+import { CloudArrowUpIcon } from "./components/icons/CloudArrowUpIcon";
 
 function FormPage5() {
   const dispatch = useDispatch();
@@ -82,7 +83,9 @@ function FormPage5() {
             />
           </Field>
           <Field className={withPrefix("mb-4")}>
-            <Label>Financial Institution Number</Label>
+            <Label className={withPrefix("font-bold")}>
+              Financial Institution Number
+            </Label>
             <WrappedInput
               showSearch={false}
               invalid={
@@ -148,6 +151,31 @@ function FormPage5() {
       {formData.payment_mode === "provide_void_cheque" && (
         <div>
           <h1 className={withPrefix("py-4 text-2xl")}>Upload a Void Cheque</h1>
+          <div className={withPrefix("mt-2 mb-4 pf:text-gray-600")}>
+            Upload a picture of a void cheque from your camera roll or take a
+            picture of a void cheque with you camera.
+          </div>
+
+          {(!formData.void_cheque_image ||
+            (formData.void_cheque_image &&
+              formData.void_cheque_image === "")) && (
+            <div className={withPrefix("flex justify-center")}>
+              <div
+                className={withPrefix(
+                  "border-2 border-gray-300 rounded-xl p-4 w-[200px] pf:bg-gray-100 text-center text-gray-600 flex flex-col  items-center justify-center cursor-pointer",
+                )}
+                onClick={() => {
+                  const fileInput = document.querySelector(
+                    'input[name="void_cheque"]',
+                  ) as HTMLInputElement;
+                  fileInput.click();
+                }}
+              >
+                <CloudArrowUpIcon />
+                Click here to select an image or take a picture
+              </div>
+            </div>
+          )}
           <Input
             invalid={
               showValidationError &&
@@ -192,10 +220,6 @@ function FormPage5() {
                                 const resizedReader = new FileReader();
                                 resizedReader.onloadend = () => {
                                   if (resizedReader.result) {
-                                    console.log("trying to dispatch 1");
-                                    console.log(
-                                      resizedReader.result.toString(),
-                                    );
                                     dispatch(
                                       updateField({
                                         field: "void_cheque_image",
@@ -203,8 +227,6 @@ function FormPage5() {
                                       }),
                                     );
                                     setVoidChequeImageError(false);
-                                  } else {
-                                    console.log("failing");
                                   }
                                 };
                                 resizedReader.readAsDataURL(blob);
@@ -221,7 +243,6 @@ function FormPage5() {
                         setVoidChequeImageError(true);
                       }
                     } else {
-                      console.log("trying to dispatch");
                       dispatch(
                         updateField({
                           field: "void_cheque_image",
@@ -255,54 +276,35 @@ function FormPage5() {
               </div>
             </div>
           )}
+          {formData.payment_mode === "provide_void_cheque" &&
+            formData.void_cheque_image > "" && (
+              <div className={withPrefix("justify-end flex mt-4")}>
+                <Button
+                  outline={true}
+                  onClick={() => {
+                    dispatch(
+                      updateField({
+                        field: "void_cheque_image",
+                        value: "",
+                      }),
+                    );
+                    const fileInput = document.querySelector(
+                      'input[name="void_cheque"]',
+                    ) as HTMLInputElement;
+                    fileInput.click();
+                  }}
+                >
+                  Replace Image
+                </Button>
+              </div>
+            )}
         </div>
       )}
 
       <AllFieldsRequiredMessage show={showValidationError} id="/page5" />
       <FooterWrapper>
-        {formData.payment_mode === "provide_void_cheque" &&
-          formData.void_cheque_image === "" && (
-            <Button
-              outline={true}
-              className={withPrefix(
-                `w-full !rounded-full !font-normal !text-sm`,
-              )}
-              onClick={() => {
-                const fileInput = document.querySelector(
-                  'input[name="void_cheque"]',
-                ) as HTMLInputElement;
-                fileInput.click();
-              }}
-            >
-              Select Image
-            </Button>
-          )}
-        {formData.payment_mode === "provide_void_cheque" &&
-          formData.void_cheque_image > "" && (
-            <Button
-              outline={true}
-              className={withPrefix(
-                `w-full !rounded-full !font-normal !text-sm`,
-              )}
-              onClick={() => {
-                dispatch(
-                  updateField({
-                    field: "void_cheque_image",
-                    value: "",
-                  }),
-                );
-                const fileInput = document.querySelector(
-                  'input[name="void_cheque"]',
-                ) as HTMLInputElement;
-                fileInput.click();
-              }}
-            >
-              Replace Image
-            </Button>
-          )}
         <NavButton
           action={() => {
-            console.log(formData.payment_mode);
             if (pageIsValid) {
               if (formData.payment_mode === "provide_banking_information") {
                 dispatch(
@@ -312,7 +314,6 @@ function FormPage5() {
                   }),
                 );
               } else if (formData.payment_mode === "provide_void_cheque") {
-                console.log("clearing");
                 dispatch(
                   updateField({
                     field: "branch_transit_number",

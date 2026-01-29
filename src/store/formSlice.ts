@@ -12,6 +12,11 @@ export interface FormState {
   last_name: string;
   business_name: string;
   email: string;
+  phone_number: string;
+  secondary_phone_number: string;
+  secondary_first_name: string;
+  secondary_last_name: string;
+  secondary_email: string;
   payment_mode: string;
   pageVisited: string[];
   accept_preauth_terms_and_conditions?: string;
@@ -22,8 +27,12 @@ export interface FormState {
   bank_account_number: string;
   verify_entered_information?: string;
   signature_image: string;
+  secondary_signature_image: string;
   location_id: string;
+  city: string;
+  postal_code: string;
   submission_id: string;
+  has_secondary_occupant?: string;
 }
 
 export const emptyForm: FormState = {
@@ -37,6 +46,11 @@ export const emptyForm: FormState = {
   last_name: "",
   business_name: "",
   email: "",
+  phone_number: "",
+  secondary_phone_number: "",
+  secondary_first_name: "",
+  secondary_last_name: "",
+  secondary_email: "",
   payment_mode: "",
   pageVisited: [],
   accept_preauth_terms_and_conditions: "",
@@ -47,8 +61,12 @@ export const emptyForm: FormState = {
   bank_account_number: "",
   verify_entered_information: "",
   signature_image: "",
+  secondary_signature_image: "",
   location_id: "",
   submission_id: "",
+  has_secondary_occupant: "false",
+  city: "",
+  postal_code: "",
 };
 
 const getInitialState = (): FormState => {

@@ -17,12 +17,31 @@ export const validationRequirements = [
     fields: [
       { name: "first_name" },
       { name: "last_name" },
-      {
-        conditional: "occupancy_type",
-        value: "HOME_OWNER",
-        id: "business_name",
-      },
+
       { name: "email", format: "email" },
+      { name: "phone_number", format: "phone" },
+      {
+        conditional: "has_secondary_occupant",
+        value: "true",
+        id: "secondary_first_name",
+      },
+      {
+        conditional: "has_secondary_occupant",
+        value: "true",
+        id: "secondary_last_name",
+      },
+      {
+        conditional: "has_secondary_occupant",
+        value: "true",
+        id: "secondary_email",
+        format: "email",
+      },
+      {
+        conditional: "has_secondary_occupant",
+        value: "true",
+        id: "secondary_phone_number",
+        format: "phone",
+      },
     ],
   },
   {
@@ -70,6 +89,11 @@ export const validationRequirements = [
     fields: [
       { name: "verify_entered_information" },
       { name: "signature_image" },
+      {
+        conditional: "has_secondary_occupant",
+        value: "true",
+        id: "secondary_signature_image",
+      },
     ],
   },
   { id: "/page9", fields: [] },

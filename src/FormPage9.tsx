@@ -113,8 +113,6 @@ function FormPage9() {
             try {
               // Check if we have a PDF blob from the new API response
               if (submissionData && submissionData.submission_id) {
-                console.log(submissionData.submission_id);
-
                 await requestPDF(submissionData.submission_id);
               }
             } catch (error) {

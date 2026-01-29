@@ -9,53 +9,61 @@ import { updateField } from "../store/formSlice";
 import ShowUnitResults from "./ShowUnitResults";
 import { Button } from "./button";
 import { withPrefix } from "../utils/withPrefix";
-import { Table, TableBody, TableRow, TableCell } from "./table";
 import { Input } from "./input";
+import { SearchIcon } from "./icons/SearchIcon";
 
 function AddressSearch() {
-  const [unitQuery, setUnitQuery] = useState<string>("");
+  const [showNoUnits, setShowNoUnits] = useState<boolean>(false);
+  const [showNoBuildings, setShowNoBuildings] = useState<boolean>(false);
 
   const dispatch = useDispatch<AppDispatch>();
   const searchResults = useSelector(
-    (state: RootState) => state.address.filteredAddresses || []
+    (state: RootState) => state.address.filteredAddresses || [],
   );
 
   const unitResults = useSelector(
-    (state: RootState) => state.address.filteredUnits || []
+    (state: RootState) => state.address.filteredUnits || [],
   );
   const [showResults, setShowResults] = useState<boolean>(
-    searchResults.length > 0 ? true : false
+    searchResults.length > 0 ? true : false,
   );
 
   const [showUnitResults, setShowUnitResults] = useState<boolean>(
-    unitResults.length > 0 ? true : false
+    unitResults.length > 0 ? true : false,
   );
 
   const formData = useSelector((state: RootState) => state.form);
   const [searchQuery, setSearchQuery] = useState<string>(
-    formData.selected_address || ""
+    formData.selected_address || "",
+  );
+  const [unitQuery, setUnitQuery] = useState<string>(
+    formData.selected_unit || "",
   );
 
   const throttledBuildingSearch = useCallback(
     throttle(
-      (addressQuery: string) => {
-        dispatch(searchAddressesAsync({ addressQuery, type: "BUILDING" }));
+      async (addressQuery: string) => {
+        const addresses = searchAddressesAsync({
+          addressQuery,
+          type: "BUILDING",
+        });
 
-        if (addressQuery.length > 0) {
-          setShowResults(true);
-        } else {
-          setShowResults(false);
-        }
+        const result = await dispatch(addresses).unwrap();
+
+        setShowNoBuildings(
+          result.filteredAddresses.length === 0 ? true : false,
+        );
+        setShowResults(addressQuery.length > 0 ? true : false);
       },
       750,
-      { leading: false }
+      { leading: false },
     ),
-    [dispatch]
+    [dispatch],
   );
 
   const throttledUnitSearch = useCallback(
     throttle(
-      (addressQuery: string, selected_address: string) => {
+      async (addressQuery: string, selected_address: string) => {
         const street_number = selected_address
           ? selected_address.split(" ")[0]
           : "";
@@ -64,25 +72,26 @@ function AddressSearch() {
           ? selected_address.split(" ").slice(1).join(" ")
           : "";
 
-        dispatch(
+        const results = await dispatch(
           searchAddressesAsync({
             addressQuery,
             type: "UNIT",
             street_number,
             street_name,
-          })
-        );
+          }),
+        ).unwrap();
 
-        if (addressQuery.length > 0) {
-          setShowUnitResults(true);
-        } else {
-          setShowUnitResults(false);
-        }
+        setShowNoUnits(
+          results.filteredAddresses && results.filteredAddresses.length === 0
+            ? true
+            : false,
+        );
+        setShowUnitResults(addressQuery.length > 0 ? true : false);
       },
       750,
-      { leading: false }
+      { leading: false },
     ),
-    [dispatch]
+    [dispatch],
   );
 
   const searchForAddresses = async (query: string) => {
@@ -95,8 +104,6 @@ function AddressSearch() {
     setUnitQuery(query);
 
     throttledUnitSearch(query, formData.selected_address);
-    // throttledSearch(searchQuery, query);
-    // console.log("Searching for units:", query);
     dispatch(updateField({ field: "selected_unit", value: "" }));
   };
 
@@ -109,115 +116,67 @@ function AddressSearch() {
   const selectThisAddress = (address: string) => {
     setSearchQuery(address);
     dispatch(updateField({ field: "selected_address", value: address }));
+    dispatch(updateField({ field: "selected_unit", value: "" }));
+    dispatch(updateField({ field: "location_id", value: "" }));
+    setUnitQuery("");
+    setShowUnitResults(false);
+    setShowNoUnits(false);
 
     // searchForAddressesImmediately(address);
   };
 
-  const selectThisUnit = (unit: string, location_id: string) => {
+  const selectThisUnit = (
+    unit: string,
+    location_id: string,
+    city: string,
+    postal_code: string,
+  ) => {
+    console.log("got ", city, postal_code);
     setUnitQuery(unit);
     dispatch(updateField({ field: "selected_unit", value: unit }));
-    console.log("setting location id", location_id);
     dispatch(updateField({ field: "location_id", value: location_id }));
+    dispatch(updateField({ field: "city", value: city }));
+    dispatch(updateField({ field: "postal_code", value: postal_code }));
   };
 
   return (
     <div className={withPrefix("mt-4 mb-4")}>
-      {formData.selected_address === "" && (
-        <div>
-          <strong>Enter Address</strong>
-          <br />
-          <span>
-            Start typing the address below, then select from the available
-            choices.
-          </span>
-        </div>
-      )}
+      <div>
+        <strong>Enter Address</strong>
+        <br />
+        <span>eg., Homewood, Fairview</span>
+      </div>
 
-      {formData.selected_address !== "" && (
-        <Table bleed>
-          <TableBody>
-            <TableRow>
-              <TableCell className={withPrefix("font-medium")}>
-                Building:
-              </TableCell>
-              <TableCell>{formData.selected_address}</TableCell>
-              <TableCell className={withPrefix("text-sm text-right")}>
-                <Button
-                  plain
-                  className={withPrefix("text-red-500")}
-                  onClick={() => {
-                    setUnitQuery("");
-                    setSearchQuery("");
-                    dispatch(
-                      updateField({ field: "selected_address", value: "" })
-                    );
-                    setShowResults(false);
-                  }}
-                >
-                  <span className={withPrefix("text-red-500")}>X</span>
-                </Button>
-              </TableCell>
-            </TableRow>
-            {formData.selected_unit !== "" && (
-              <TableRow>
-                <TableCell className={withPrefix("font-medium")}>
-                  Unit:
-                </TableCell>
-                <TableCell>{formData.selected_unit}</TableCell>
-                <TableCell
-                  className={withPrefix("text-zinc-500 pf:text-right")}
-                >
-                  <Button
-                    plain
-                    onClick={() => {
-                      setUnitQuery("");
+      <div
+        className={withPrefix(
+          "border border-gray-300 rounded-md mt-2 flex shadow-md items-center",
+        )}
+      >
+        <SearchIcon />
+        <Input
+          type="text"
+          placeholder="Enter address"
+          value={searchQuery}
+          onChange={(e) => searchForAddresses(e.target.value)}
+          autoComplete="off"
+        />
 
-                      dispatch(
-                        updateField({ field: "selected_unit", value: "" })
-                      );
-                      setShowUnitResults(false);
-                    }}
-                  >
-                    <span className={withPrefix("text-red-500")}>X</span>
-                  </Button>
-                </TableCell>
-              </TableRow>
-            )}
-          </TableBody>
-        </Table>
-      )}
-
-      {formData.selected_address === "" && (
-        <Table bleed>
-          <TableBody>
-            <TableRow>
-              <TableCell>
-                <Input
-                  type="text"
-                  placeholder="Enter address"
-                  value={searchQuery}
-                  onChange={(e) => searchForAddresses(e.target.value)}
-                />
-              </TableCell>
-              <TableCell className={withPrefix("text-right")}>
-                <Button
-                  plain
-                  onClick={() => {
-                    setUnitQuery("");
-                    setSearchQuery("");
-                    dispatch(
-                      updateField({ field: "selected_address", value: "" })
-                    );
-                    setShowResults(false);
-                  }}
-                >
-                  <span className={withPrefix("text-red-500")}>X</span>
-                </Button>
-              </TableCell>
-            </TableRow>
-          </TableBody>
-        </Table>
-      )}
+        <Button
+          plain
+          className={withPrefix("mr-[2px] mt-[0.5px]")}
+          onClick={() => {
+            setUnitQuery("");
+            setSearchQuery("");
+            dispatch(updateField({ field: "selected_address", value: "" }));
+            setShowResults(false);
+            setShowNoBuildings(false);
+          }}
+        >
+          {searchQuery > "" && (
+            <span className={withPrefix("text-gray-500")}>X</span>
+          )}
+        </Button>
+      </div>
 
       {searchResults.length > 0 &&
         showResults === true &&
@@ -229,51 +188,59 @@ function AddressSearch() {
             formData={formData}
           />
         )}
-
-      {searchResults.length === 0 && showResults === true && (
-        <div>No results found</div>
+      {showNoBuildings && searchQuery > "" && (
+        <div className={withPrefix("relative")}>
+          <div
+            className={withPrefix(
+              "absolute l-0 t-0 w-full max-w-[100%] max-h-[300px] overflow-y-auto border-2 border-gray-300 rounded-lg z-10 bg-white shadow-lg p-2",
+            )}
+          >
+            No buildings found.
+          </div>
+        </div>
       )}
 
       {formData.selected_address && formData.selected_address > "" && (
         <div className={withPrefix("mt-4 mb-4")}>
-          {formData.selected_unit === "" && (
-            <div>
-              <strong>Suite or Unit Number</strong>
-              <br />
-              eg., 1507, 1001B, PH10
-            </div>
-          )}
-          {formData.selected_unit === "" && (
-            <Table bleed>
-              <TableBody>
-                <TableRow>
-                  <TableCell>
-                    <Input
-                      type="text"
-                      placeholder="Enter Unit or Suite Number"
-                      value={unitQuery}
-                      onChange={(e) => searchForUnits(e.target.value)}
-                    />
-                  </TableCell>
-                  <TableCell className={withPrefix("text-right")}>
-                    <Button
-                      plain
-                      onClick={() => {
-                        setUnitQuery("");
-                        setSearchQuery(formData.selected_address);
-                        dispatch(
-                          updateField({ field: "selected_unit", value: "" })
-                        );
-                        setShowResults(false);
-                      }}
-                    >
-                      <span className={withPrefix("text-red-500")}>X</span>
-                    </Button>
-                  </TableCell>
-                </TableRow>
-              </TableBody>
-            </Table>
-          )}
+          <div>
+            <strong>Suite or Unit Number</strong>
+            <br />
+            eg., 1507, 1001B, PH10
+          </div>
+
+          <div
+            className={withPrefix(
+              "border border-gray-300 rounded-md mt-2 flex shadow-md items-center",
+            )}
+          >
+            <SearchIcon />
+            <Input
+              type="text"
+              placeholder=""
+              value={unitQuery}
+              onChange={(e) => {
+                searchForUnits(e.target.value);
+              }}
+              autoComplete="off"
+            />
+
+            <Button
+              plain
+              className={withPrefix("mr-[2px] mt-[0.5px]")}
+              onClick={() => {
+                setUnitQuery("");
+                setSearchQuery(formData.selected_address);
+                dispatch(updateField({ field: "selected_unit", value: "" }));
+                setShowResults(false);
+                setShowNoUnits(false);
+              }}
+            >
+              {unitQuery > "" && (
+                <span className={withPrefix("text-gray-500")}>X</span>
+              )}
+            </Button>
+          </div>
+
           {searchResults.length > 0 &&
             showUnitResults === true &&
             (!formData.selected_unit || formData.selected_unit === "") && (
@@ -283,6 +250,17 @@ function AddressSearch() {
                 selectThisUnit={selectThisUnit}
               />
             )}
+          {showNoUnits && unitQuery > "" && (
+            <div className={withPrefix("relative")}>
+              <div
+                className={withPrefix(
+                  "absolute l-0 t-0 w-full max-w-[100%] max-h-[300px] overflow-y-auto border-2 border-gray-300 rounded-lg z-10 bg-white shadow-lg p-2",
+                )}
+              >
+                No units found.
+              </div>
+            </div>
+          )}
         </div>
       )}
     </div>

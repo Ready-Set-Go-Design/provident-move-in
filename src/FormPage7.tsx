@@ -17,24 +17,35 @@ function FormPage6() {
     useState<boolean>(false);
   const pageIsValid = isPageValid("/page7");
 
+  const friendlyDate = new Date(
+    `${formData.occupancy_year}-${formData.occupancy_month}-${formData.occupancy_day}`,
+  ).toLocaleDateString(undefined, {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  });
+
   return (
     <div className={withPrefix("p-4 w-full max-w-[400px] m-auto pb-24")}>
       <div className={withPrefix("mb-4")}>
-        <h1 className={withPrefix("py-4 text-2xl")}>
+        <h1 className={withPrefix("py-4 text-2xl font-bold")}>
           Summary And Confirmation
         </h1>
-        <div className={withPrefix("flex justify-between w-full items-center")}>
-          <div>
-            <div>
-              Occupancy Type: <strong>{formData.occupancy_type}</strong>{" "}
+        <div>
+          <div
+            className={withPrefix(
+              "grid grid-cols-[2fr_3fr] gap-2 text-sm mb-2",
+            )}
+          >
+            <div className={withPrefix("text-gray-600")}>Occupancy Type:</div>
+
+            <div className={withPrefix("font-bold")}>
+              {formData.occupancy_type.toLowerCase().at(0)?.toUpperCase() +
+                formData.occupancy_type.toLowerCase().slice(1)}
             </div>
-            <div>
-              Occupancy Date:{" "}
-              <strong>
-                {formData.occupancy_day}/{formData.occupancy_month}/
-                {formData.occupancy_year}
-              </strong>
-            </div>
+
+            <div className={withPrefix("text-gray-600")}>Occupancy Date:</div>
+            <div className={withPrefix("font-bold")}>{friendlyDate}</div>
           </div>
           <Button color="light" onClick={() => navigate("/?from=page7")}>
             Edit
@@ -42,14 +53,20 @@ function FormPage6() {
         </div>
       </div>
       <div className={withPrefix("mb-4")}>
-        <h1>Your Service Address</h1>
-        <div className={withPrefix("flex justify-between w-full items-center")}>
-          <div>
-            <div>
-              Address: <strong>{formData.selected_address}</strong>{" "}
-            </div>
-            <div>
-              Unit: <strong>{formData.selected_unit}</strong>
+        <h1 className={withPrefix("font-bold mb-2")}>Your Service Address</h1>
+        <div>
+          <div
+            className={withPrefix(
+              "grid grid-cols-[2fr_3fr] gap-2 text-sm mb-2",
+            )}
+          >
+            <div className={withPrefix("text-gray-600")}>Service Address:</div>
+            <div className={withPrefix("font-bold")}>
+              <div>
+                {formData.selected_unit} - {formData.selected_address}
+              </div>
+              <div>{formData.city}</div>
+              <div>{formData.postal_code}</div>
             </div>
           </div>
           <Button
@@ -62,22 +79,67 @@ function FormPage6() {
       </div>
 
       <div className={withPrefix("mb-4")}>
-        <h1>Primary Account Holder</h1>
-        <div className={withPrefix("flex justify-between w-full items-center")}>
+        <h1 className={withPrefix("font-bold mb-2")}>Contact Details</h1>
+        <div>
           <div>
-            <div>
-              First Name: <strong>{formData.first_name}</strong>{" "}
+            <div
+              className={withPrefix(
+                "grid grid-cols-[2fr_3fr] gap-2 text-sm mb-2",
+              )}
+            >
+              <div className={withPrefix("text-gray-600")}>First Name:</div>
+              <div className={withPrefix("font-bold")}>
+                {formData.first_name}
+              </div>
+              <div className={withPrefix("text-gray-600")}>Last Name:</div>
+              <div className={withPrefix("font-bold")}>
+                {formData.last_name}
+              </div>
+              <div className={withPrefix("text-gray-600")}>Business Name:</div>
+              <div className={withPrefix("font-bold")}>
+                {formData.business_name || (
+                  <span className={withPrefix("text-gray-300")}>N/A</span>
+                )}
+              </div>
+              <div className={withPrefix("text-gray-600")}>Email:</div>
+              <div className={withPrefix("font-bold")}>{formData.email}</div>
+              <div className={withPrefix("text-gray-600")}>Phone Number:</div>
+              <div className={withPrefix("font-bold")}>
+                {formData.phone_number}
+              </div>
             </div>
-            <div>
-              Last Name: <strong>{formData.last_name}</strong>{" "}
-            </div>
-            <div>
-              Business Name: <strong>{formData.business_name}</strong>{" "}
-            </div>
+            {formData.has_secondary_occupant === "true" && (
+              <>
+                <h1 className={withPrefix("font-bold mb-2 mt-4")}>
+                  Secondary Contact Details
+                </h1>
+                <div
+                  className={withPrefix(
+                    "grid grid-cols-[2fr_3fr] gap-2 text-sm mb-2",
+                  )}
+                >
+                  <div className={withPrefix("text-gray-600")}>First Name:</div>
+                  <div className={withPrefix("font-bold")}>
+                    {formData.secondary_first_name}
+                  </div>
+                  <div className={withPrefix("text-gray-600")}>Last Name:</div>
+                  <div className={withPrefix("font-bold")}>
+                    {formData.secondary_last_name}
+                  </div>
 
-            <div>
-              Email: <strong>{formData.email}</strong>{" "}
-            </div>
+                  <div className={withPrefix("text-gray-600")}>Email:</div>
+                  <div className={withPrefix("font-bold")}>
+                    {formData.secondary_email}
+                  </div>
+                  <div className={withPrefix("text-gray-600")}>
+                    Phone Number:
+                  </div>
+                  <div className={withPrefix("font-bold")}>
+                    {formData.secondary_phone_number}
+                  </div>
+                </div>
+              </>
+            )}
           </div>
 
           <Button
@@ -90,40 +152,47 @@ function FormPage6() {
       </div>
 
       <div className={withPrefix("mb-4")}>
-        <h1>Pre-Authorized Payments</h1>
-        <div className={withPrefix("flex justify-between w-full items-center")}>
+        <h1 className={withPrefix("font-bold mb-2")}>Pre-auth payment info</h1>
+        <div>
           <div>
-            <div>
-              Payment Mode:{" "}
-              <strong>
-                {humanizeString(formData.payment_mode || "Not Selected")}
-              </strong>
-            </div>
-
-            {formData.payment_mode === "provide_banking_information" && (
-              <>
-                <div>
-                  Branch Transit Number:{" "}
-                  <strong>{formData.branch_transit_number}</strong>
-                </div>
-                <div>
-                  Bank Account Number:{" "}
-                  <strong>{formData.bank_account_number}</strong>
-                </div>
-                <div>
-                  Financial Institution Number:{" "}
-                  <strong>{formData.financial_institution_number}</strong>
-                </div>
-              </>
-            )}
             {formData.payment_mode === "provide_void_cheque" && (
-              <div>
-                Void Cheque:{" "}
+              <div
+                className={withPrefix(
+                  "border-2 border-gray-300 rounded-xl p-2 pf:bg-gray-100",
+                )}
+              >
                 <img
                   src={formData.void_cheque_image}
                   alt="Void Cheque"
-                  className={withPrefix("w-32 h-32")}
+                  className={withPrefix("w-full h-auto")}
                 />
+              </div>
+            )}
+
+            {formData.payment_mode === "provide_banking_information" && (
+              <div
+                className={withPrefix(
+                  "grid grid-cols-[2fr_3fr] gap-2 text-sm mb-2",
+                )}
+              >
+                <div className={withPrefix("text-gray-600")}>
+                  Transit Number:
+                </div>
+                <div className={withPrefix("font-bold")}>
+                  {formData.branch_transit_number}
+                </div>
+                <div className={withPrefix("text-gray-600")}>
+                  Institution Number:
+                </div>
+                <div className={withPrefix("font-bold")}>
+                  {formData.financial_institution_number}
+                </div>
+                <div className={withPrefix("text-gray-600")}>
+                  Account Number:
+                </div>
+                <div className={withPrefix("font-bold")}>
+                  {formData.bank_account_number}
+                </div>
               </div>
             )}
           </div>
@@ -136,14 +205,16 @@ function FormPage6() {
         </div>
       </div>
       <div>
-        <h1>Terms and Conditions</h1>
-        <div className={withPrefix("flex justify-between w-full items-center")}>
-          <div>
-            <div>
-              Accept Terms and Conditions:{" "}
-              <strong>
-                {formData.accept_terms_and_conditions ? "Yes" : "No"}
-              </strong>
+        <h1 className={withPrefix("font-bold mb-2")}>Terms and Conditions</h1>
+        <div>
+          <div
+            className={withPrefix(
+              "grid grid-cols-[2fr_3fr] gap-2 text-sm mb-2",
+            )}
+          >
+            <div>Accept Terms and Conditions:</div>
+            <div className={withPrefix("font-bold")}>
+              {formData.accept_terms_and_conditions ? "Yes" : "No"}
             </div>
           </div>
           <Button color="light" onClick={() => navigate("/form_page6")}>

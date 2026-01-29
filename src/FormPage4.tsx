@@ -43,6 +43,20 @@ function FormPage4() {
           defaultValue="provide_banking_information"
           value={formData.payment_mode}
           onChange={(e) => {
+            if (e === "provide_void_cheque") {
+              dispatch(
+                updateField({ field: "branch_transit_number", value: "" }),
+              );
+              dispatch(
+                updateField({
+                  field: "financial_institution_number",
+                  value: "",
+                }),
+              );
+              dispatch(updateField({ field: "account_number", value: "" }));
+            } else {
+              dispatch(updateField({ field: "void_cheque_image", value: "" }));
+            }
             dispatch(
               updateField({
                 field: "payment_mode",
@@ -53,15 +67,19 @@ function FormPage4() {
         >
           <RadioField>
             <Radio value="provide_banking_information" color="green" />
-            <Label>Provide banking information</Label>
-            <Description>
+            <Label className={withPrefix("!font-bold")}>
+              Provide banking information
+            </Label>
+            <Description className={withPrefix("text-gray-600")}>
               Customers can provide their banking information for payments.
             </Description>
           </RadioField>
           <RadioField>
             <Radio value="provide_void_cheque" color="green" />
-            <Label>Provide a void cheque</Label>
-            <Description>
+            <Label className={withPrefix("!font-bold")}>
+              Provide a void cheque
+            </Label>
+            <Description className={withPrefix("text-gray-600")}>
               Customers can provide a void cheque for payments.
             </Description>
           </RadioField>
@@ -91,7 +109,9 @@ function FormPage4() {
             );
           }}
         />
-        <Label>I accept the terms and conditions of pre-auth payments</Label>
+        <Label className={withPrefix("font-bold")}>
+          I accept the terms and conditions of pre-auth payments
+        </Label>
       </CheckboxField>
 
       <AllFieldsRequiredMessage show={showValidationError} id="/page4" />
@@ -118,7 +138,7 @@ function FormPage4() {
         <NavButton
           action={() => {
             if (pageIsValid) {
-              navigate(from ? `/form_${from}` : "/form_page5");
+              navigate(from ? `/form_page5?from=${from}` : "/form_page5");
             } else {
               setShowValidationError(true);
             }

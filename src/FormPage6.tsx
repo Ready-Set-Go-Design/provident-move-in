@@ -10,6 +10,7 @@ import { useState } from "react";
 import { Input } from "./components/input";
 import { Checkbox, CheckboxField } from "./components/checkbox";
 import { FooterWrapper } from "./components/FooterWrapper";
+import { Label } from "./components/fieldset";
 
 function FormPage6() {
   const dispatch = useDispatch();
@@ -70,7 +71,9 @@ function FormPage6() {
               );
             }}
           />{" "}
-          I accept the terms and conditions of pre-auth payments
+          <Label className={withPrefix("font-bold")}>
+            I accept the terms and conditions of pre-auth payments
+          </Label>
         </CheckboxField>
       </div>
 

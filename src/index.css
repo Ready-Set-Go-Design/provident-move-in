@@ -66,3 +66,7 @@ button:focus-visible {
     background-color: #f9f9f9;
   }
 }
+.button-base {
+  background-color: var(--primary-color);
+  color: var(--provident-white);
+}

@@ -18,6 +18,7 @@ function FormPage8() {
   const navigate = useNavigate();
   const formData = useSelector((state: RootState) => state.form);
   const sigCanvas = useRef<SignatureCanvas | null>(null);
+  const sigCanvas2 = useRef<SignatureCanvas | null>(null);
   const [showValidationError, setShowValidationError] =
     useState<boolean>(false);
   const pageIsValid = isPageValid("/page8");
@@ -26,6 +27,12 @@ function FormPage8() {
     if (sigCanvas.current) {
       sigCanvas.current.clear();
       dispatch(updateField({ field: "signature_image", value: "" }));
+    }
+  };
+  const clearForm2 = () => {
+    if (sigCanvas2.current) {
+      sigCanvas2.current.clear();
+      dispatch(updateField({ field: "secondary_signature_image", value: "" }));
     }
   };
 
@@ -40,6 +47,14 @@ function FormPage8() {
       });
       img.setAttribute("src", formData.signature_image);
     }
+    if (formData.secondary_signature_image && sigCanvas2.current) {
+      sigCanvas2.current.clear();
+      const img = new window.Image();
+      img.addEventListener("load", function () {
+        sigCanvas2.current?.getCanvas().getContext("2d")?.drawImage(img, 0, 0);
+      });
+      img.setAttribute("src", formData.secondary_signature_image);
+    }
   };
 
   useEffect(() => {
@@ -49,7 +64,7 @@ function FormPage8() {
 
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
-  }, [formData.signature_image]);
+  }, [formData.signature_image, formData.secondary_signature_image]);
 
   useEffect(() => {
     const timeoutId = setTimeout(redrawSignature, 100);
@@ -66,12 +81,14 @@ function FormPage8() {
         </div>
 
         <div
-          className={withPrefix(
+          className={`${
+            formData.signature_image === "" ? "sig-canvas" : ""
+          } ${withPrefix(
             "border-1 rounded p-4 mt-4 w-full h-full min-h-[130px] mb-4",
             showValidationError && formData.signature_image === ""
               ? "border-red-500"
               : "border-gray-300",
-          )}
+          )}`}
           ref={containerRef as unknown as React.RefObject<HTMLDivElement>}
         >
           <SignatureCanvas
@@ -98,6 +115,49 @@ function FormPage8() {
         <Button color="white" onClick={clearForm}>
           Clear
         </Button>
+
+        {formData.has_secondary_occupant === "true" && (
+          <>
+            <h1 className={withPrefix("font-bold mb-2 mt-4")}>
+              Signature of Secondary Account Holder
+            </h1>
+            <div
+              className={`${
+                formData.secondary_signature_image === "" ? "sig-canvas" : ""
+              } ${withPrefix(
+                "border-1 rounded p-4 mt-4 w-full h-full min-h-[130px] mb-4",
+                showValidationError && formData.secondary_signature_image === ""
+                  ? "border-red-500"
+                  : "border-gray-300",
+              )}`}
+            >
+              <SignatureCanvas
+                penColor="#26aae1"
+                canvasProps={{
+                  width: width,
+                  height: "200px",
+                  className: "sigCanvas2",
+                }}
+                onEnd={() => {
+                  const base64 = sigCanvas2.current?.toDataURL();
+                  if (base64) {
+                    dispatch(
+                      updateField({
+                        field: "secondary_signature_image",
+                        value: base64 as string,
+                      }),
+                    );
+                  }
+                }}
+                ref={sigCanvas2}
+              />
+            </div>
+            <Button color="white" onClick={clearForm}>
+              Clear
+            </Button>
+          </>
+        )}
+
         <CheckboxField
           className={withPrefix(
             "border-1 rounded-md pf:overflow-hidden p-2 mt-4",
