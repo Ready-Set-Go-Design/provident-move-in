@@ -97,41 +97,39 @@ function FormPage3() {
         />
       </Field>
 
-      {formData.occupancy_type.toLowerCase() !== "tenant" && (
-        <Field className={withPrefix("mb-4")}>
-          <Label className={withPrefix("font-bold")}>
-            Business Name
-            <br />
-            <div
-              className={withPrefix("font-normal text-gray-500 mb-1 text-sm")}
-            >
-              If you wish this account be under a business enter the name below
-            </div>
-          </Label>
-          <WrappedInput
-            showSearch={false}
-            invalid={
-              showValidationError &&
-              validatedForm?.errors.includes("Business Name")
-            }
-            type="text"
-            name="business_name"
-            placeholder={""}
-            value={formData.business_name}
-            onChange={(e: any) => {
-              dispatch(
-                updateField({
-                  field: "business_name",
-                  value: e,
-                }),
-              );
-            }}
-            clearAction={(e: any) => {
-              dispatch(updateField({ field: "business_name", value: "" }));
-            }}
-          />
-        </Field>
-      )}
+      {/* {formData.occupancy_type.toLowerCase() !== "tenant" && ( */}
+      <Field className={withPrefix("mb-4")}>
+        <Label className={withPrefix("font-bold")}>
+          Business Name
+          <br />
+          <div className={withPrefix("font-normal text-gray-500 mb-1 text-sm")}>
+            If you wish this account be under a business enter the name below
+          </div>
+        </Label>
+        <WrappedInput
+          showSearch={false}
+          invalid={
+            showValidationError &&
+            validatedForm?.errors.includes("Business Name")
+          }
+          type="text"
+          name="business_name"
+          placeholder={""}
+          value={formData.business_name}
+          onChange={(e: any) => {
+            dispatch(
+              updateField({
+                field: "business_name",
+                value: e,
+              }),
+            );
+          }}
+          clearAction={(e: any) => {
+            dispatch(updateField({ field: "business_name", value: "" }));
+          }}
+        />
+      </Field>
+      {/* )} */}
       <Field className={withPrefix("mb-4")}>
         <Label className={withPrefix("font-bold")}>Email Address</Label>
 

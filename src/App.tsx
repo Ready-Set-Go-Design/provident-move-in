@@ -58,10 +58,9 @@ function App() {
       }
     }
 
-    if (
-      submission.submitted &&
-      location.pathname.indexOf("form_page9") !== -1
-    ) {
+    if (submission.submitted && location.pathname === "/") {
+      dispatch(clearForm());
+      dispatch(clearSubmission());
       setShowResetMessage(false);
     } else {
       setShowResetMessage(applicationInProgress);
