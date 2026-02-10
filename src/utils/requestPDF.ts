@@ -1,16 +1,15 @@
+import { serverUrl } from "./serverUrl";
+
 export const requestPDF = async (submissionId: string | true | string[]) => {
   try {
     const data = { id: submissionId, type: "movein" };
-    const response = await fetch(
-      `${(import.meta as any).env.VITE_API_URL}/submissions/pdf`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
+    const response = await fetch(`${serverUrl()}/submissions/pdf`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
       },
-    );
+      body: JSON.stringify(data),
+    });
 
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);

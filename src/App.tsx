@@ -6,7 +6,7 @@ import { useLocation } from "react-router-dom";
 import Stepper from "./Stepper";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "./store/store";
-import { clearForm, emptyForm } from "./store/formSlice";
+import { clearForm } from "./store/formSlice";
 import { useNavigate } from "react-router-dom";
 import FormPage1 from "./FormPage1";
 import FormPage2 from "./FormPage2";
@@ -43,8 +43,11 @@ function App() {
   useEffect(() => {
     // Check if any form fields have data
     let applicationInProgress = false;
+    console.log(formData);
     for (const key in formData) {
+      console.log("Checking form field:", key, formData[key]);
       if (key !== "pageVisited" && formData[key] !== "") {
+        console.log("Found data in form field:", key, formData[key]);
         applicationInProgress = true;
         break;
       } else if (key === "pageVisited") {
@@ -52,6 +55,7 @@ function App() {
         if (formData.pageVisited.length === 0) {
           applicationInProgress = false;
         } else {
+          console.log("Found data in pageVisited field:", formData.pageVisited);
           // If the pageVisited field has data, it means the user has visited pages
           applicationInProgress = true;
         }
@@ -71,6 +75,7 @@ function App() {
     dispatch(clearForm());
     dispatch(clearSubmission());
     setShowResetMessage(false);
+
     navigate("/");
   };
 

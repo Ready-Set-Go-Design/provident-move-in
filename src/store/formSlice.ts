@@ -64,7 +64,7 @@ export const emptyForm: FormState = {
   secondary_signature_image: "",
   location_id: "",
   submission_id: "",
-  has_secondary_occupant: "false",
+  has_secondary_occupant: "",
   city: "",
   postal_code: "",
 };
@@ -98,7 +98,9 @@ const formSlice = createSlice({
         state,
         JSON.parse(JSON.stringify(emptyForm)) as FormState,
       );
-      localStorage.setItem("moveInFormData", JSON.stringify(emptyFormInstance));
+
+      localStorage.removeItem("moveInFormData");
+      localStorage.removeItem("customerSubmissionData");
     },
     addPageVisit: (state, action: PayloadAction<string>) => {
       if (!state.pageVisited.includes(action.payload)) {

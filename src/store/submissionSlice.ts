@@ -47,8 +47,12 @@ const submissionSlice = createSlice({
       );
 
       localStorage.removeItem("moveInFormData");
+      localStorage.removeItem("customerSubmissionData");
 
-      localStorage.setItem("moveInFormData", JSON.stringify(emptyFormInstance));
+      localStorage.setItem(
+        "customerSubmissionData",
+        JSON.stringify(emptyFormInstance),
+      );
     },
   },
 });
