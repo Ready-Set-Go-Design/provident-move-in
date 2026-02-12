@@ -27,7 +27,11 @@ export interface FormState {
   bank_account_number: string;
   verify_entered_information?: string;
   signature_image: string;
+  signature_text: string;
+  signature_method: "draw" | "type" | "";
   secondary_signature_image: string;
+  secondary_signature_text: string;
+  secondary_signature_method: "draw" | "type" | "";
   location_id: string;
   city: string;
   postal_code: string;
@@ -61,7 +65,11 @@ export const emptyForm: FormState = {
   bank_account_number: "",
   verify_entered_information: "",
   signature_image: "",
+  signature_text: "",
+  signature_method: "",
   secondary_signature_image: "",
+  secondary_signature_text: "",
+  secondary_signature_method: "",
   location_id: "",
   submission_id: "",
   has_secondary_occupant: "",

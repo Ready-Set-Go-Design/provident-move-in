@@ -154,6 +154,7 @@ function AddressSearch() {
       >
         <SearchIcon />
         <Input
+          aria-label="Enter your address to find your building"
           type="text"
           placeholder="Enter address"
           value={searchQuery}
@@ -215,6 +216,7 @@ function AddressSearch() {
           >
             <SearchIcon />
             <Input
+              aria-label="Enter your suite or unit number"
               type="text"
               placeholder=""
               value={unitQuery}

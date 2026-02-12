@@ -8,7 +8,8 @@ import { isPageValid } from "./utils/isPageValid";
 import { AllFieldsRequiredMessage } from "./components/AllFieldsRequiredMessage";
 import { useState } from "react";
 import { Input } from "./components/input";
-import { Checkbox, CheckboxField } from "./components/checkbox";
+import { CheckboxField } from "./components/checkbox";
+import { FormCheckbox } from "./components/formControls";
 import { FooterWrapper } from "./components/FooterWrapper";
 import { Label } from "./components/fieldset";
 
@@ -18,6 +19,7 @@ function FormPage6() {
   const formData = useSelector((state: RootState) => state.form);
   const [showValidationError, setShowValidationError] =
     useState<boolean>(false);
+  const [announceKey, setAnnounceKey] = useState<number>(0);
   const pageIsValid = isPageValid("/page6");
   const location = useLocation();
   const urlParams = new URLSearchParams(location.search);
@@ -26,59 +28,65 @@ function FormPage6() {
   return (
     <div className={withPrefix("p-4 w-full max-w-[400px] m-auto pb-24")}>
       <div>
-        <h1 className={withPrefix("py-4 text-2xl")}>Terms And Conditions</h1>
+        <h2 className={withPrefix("py-4 text-2xl")}>Terms And Conditions</h2>
+        <main>
+          <p>
+            Provident Energy Management Inc. (“Provident”) has been retained
+            pursuant to an Agreement (the “Master Agreement”) by the developer,
+            the owner, the condominium corporation and/or the authorized agent,
+            as applicable (the “Owner/Condominium”), of the premises in which
+            the above‐noted Service Address is located and/or of premises that
+            are invoiced for utilities that include utilities consumed at or by
+            the above‐noted Service Address (the “Premises”) to supply the
+            Services (as defined below) including meter reading, billing and
+            collection services. The terms and conditions set out in this
+            agreement comprise the legally binding agreement between the
+            individual(s) named as Primary Account Holder and Secondary Account
+            Holder (if any) (“Customer”) and Provident governing Customer’s use
+            of the Services (as defined below). This Agreement is subject to
+            Provident’s Conditions of Service (as applicable to the services
+            provided by Provident at the Premises) (the “Conditions”), which may
+            be accessed at www.pemi.com. In consideration of Provident providing
+            the Services, and for other good and valuable consideration, the
+            receipt of which is acknowledged by Customer, Customer acknowledges
+            and agrees as follows:
+          </p>
 
-        <p>
-          Provident Energy Management Inc. (“Provident”) has been retained
-          pursuant to an Agreement (the “Master Agreement”) by the developer,
-          the owner, the condominium corporation and/or the authorized agent, as
-          applicable (the “Owner/Condominium”), of the premises in which the
-          above‐noted Service Address is located and/or of premises that are
-          invoiced for utilities that include utilities consumed at or by the
-          above‐noted Service Address (the “Premises”) to supply the Services
-          (as defined below) including meter reading, billing and collection
-          services. The terms and conditions set out in this agreement comprise
-          the legally binding agreement between the individual(s) named as
-          Primary Account Holder and Secondary Account Holder (if any)
-          (“Customer”) and Provident governing Customer’s use of the Services
-          (as defined below). This Agreement is subject to Provident’s
-          Conditions of Service (as applicable to the services provided by
-          Provident at the Premises) (the “Conditions”), which may be accessed
-          at www.pemi.com. In consideration of Provident providing the Services,
-          and for other good and valuable consideration, the receipt of which is
-          acknowledged by Customer, Customer acknowledges and agrees as follows:
-        </p>
-
-        <CheckboxField
-          className={withPrefix(
-            "border-1 rounded-md pf:overflow-hidden p-2 mt-4",
-            showValidationError && formData.accept_terms_and_conditions === ""
-              ? "border-red-500"
-              : "border-transparent",
-          )}
-        >
-          <Checkbox
-            color="green"
-            name="accept_terms_and_conditions"
-            value={formData.accept_terms_and_conditions}
-            checked={formData.accept_terms_and_conditions == "true"}
-            onChange={(checked) => {
-              dispatch(
-                updateField({
-                  field: "accept_terms_and_conditions",
-                  value: checked ? "true" : "",
-                }),
-              );
-            }}
-          />{" "}
-          <Label className={withPrefix("font-bold")}>
+          <CheckboxField
+            className={withPrefix(
+              "border-1 rounded-md pf:overflow-hidden p-2 mt-4",
+              showValidationError && formData.accept_terms_and_conditions === ""
+                ? "border-(--validation-error-color)"
+                : "border-transparent",
+            )}
+          >
+            <FormCheckbox
+              color="green"
+              value={formData.accept_terms_and_conditions}
+              name="accept_terms_and_conditions"
+              checked={formData.accept_terms_and_conditions == "true"}
+              onChange={(checked) => {
+                dispatch(
+                  updateField({
+                    field: "accept_terms_and_conditions",
+                    value: checked ? "true" : "",
+                  }),
+                );
+              }}
+            />{" "}
+          <span className={withPrefix("font-bold")}>
             I accept the terms and conditions of pre-auth payments
-          </Label>
-        </CheckboxField>
+          </span>
+          </CheckboxField>
+        </main>
       </div>
 
       <div className={withPrefix("mt-4")}>
-        <AllFieldsRequiredMessage show={showValidationError} id="/page6" />
+        <AllFieldsRequiredMessage
+          show={showValidationError}
+          id="/page6"
+          announceKey={announceKey}
+        />
         <FooterWrapper>
           <NavButton
             label="Save and Continue"
@@ -87,6 +95,7 @@ function FormPage6() {
                 navigate(from ? `/form_${from}` : "/form_page7");
               } else {
                 setShowValidationError(true);
+                setAnnounceKey((current) => current + 1);
               }
             }}
             currentPage="page6"

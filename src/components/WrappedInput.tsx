@@ -11,6 +11,7 @@ export const WrappedInput = ({
   invalid,
   type,
   name,
+  id,
   placeholder,
 }: {
   showSearch?: boolean;
@@ -20,6 +21,7 @@ export const WrappedInput = ({
   invalid?: boolean;
   type: string;
   name: string;
+  id?: string;
   placeholder?: string;
 }) => {
   return (
@@ -37,6 +39,7 @@ export const WrappedInput = ({
         invalid={invalid || false}
         type={type || "text"}
         name={name}
+        id={id}
         placeholder={placeholder}
         value={value}
         onChange={(e) => onChange(e.target.value)}

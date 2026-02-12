@@ -9,9 +9,12 @@ import { withPrefix } from "./utils/withPrefix";
 import { isPageValid } from "./utils/isPageValid";
 import { useMeasure } from "react-use";
 import { AllFieldsRequiredMessage } from "./components/AllFieldsRequiredMessage";
-import { Checkbox, CheckboxField } from "./components/checkbox";
+import { CheckboxField } from "./components/checkbox";
+import { FormCheckbox } from "./components/formControls";
+import { WrappedInput } from "./components/WrappedInput";
 import { Button } from "./components/button";
 import { FooterWrapper } from "./components/FooterWrapper";
+import { Label } from "./components/fieldset";
 
 function FormPage8() {
   const dispatch = useDispatch();
@@ -21,7 +24,44 @@ function FormPage8() {
   const sigCanvas2 = useRef<SignatureCanvas | null>(null);
   const [showValidationError, setShowValidationError] =
     useState<boolean>(false);
+  const [announceKey, setAnnounceKey] = useState<number>(0);
+  const [signatureMethod, setSignatureMethod] = useState<"draw" | "type">(
+    formData.signature_method === "draw" || formData.signature_method === "type"
+      ? formData.signature_method
+      : formData.signature_text
+        ? "type"
+        : "draw",
+  );
+  const [secondarySignatureMethod, setSecondarySignatureMethod] = useState<
+    "draw" | "type"
+  >(
+    formData.secondary_signature_method === "draw" ||
+      formData.secondary_signature_method === "type"
+      ? formData.secondary_signature_method
+      : formData.secondary_signature_text
+        ? "type"
+        : "draw",
+  );
   const pageIsValid = isPageValid("/page8");
+
+  useEffect(() => {
+    if (!formData.signature_method) {
+      dispatch(
+        updateField({ field: "signature_method", value: signatureMethod }),
+      );
+    }
+  }, [dispatch, formData.signature_method, signatureMethod]);
+
+  useEffect(() => {
+    if (!formData.secondary_signature_method) {
+      dispatch(
+        updateField({
+          field: "secondary_signature_method",
+          value: secondarySignatureMethod,
+        }),
+      );
+    }
+  }, [dispatch, formData.secondary_signature_method, secondarySignatureMethod]);
 
   const clearForm = () => {
     if (sigCanvas.current) {
@@ -73,88 +113,299 @@ function FormPage8() {
 
   return (
     <div className={withPrefix("p-4 w-full max-w-[400px] m-auto pb-24")}>
-      <h1 className={withPrefix("py-4 text-2xl")}>Signature</h1>
-      <div className={withPrefix("mb-4")}>
+      <h2 className={withPrefix("py-4 text-2xl")}>Signature</h2>
+      <main>
         <div>
-          By typing your name in the fields below, you are legally signing this
-          digital form.
+          By writing your name(s) in the field(s) below, you are legally signing
+          this digital form.
         </div>
 
-        <div
-          className={`${
-            formData.signature_image === "" ? "sig-canvas" : ""
-          } ${withPrefix(
-            "border-1 rounded p-4 mt-4 w-full h-full min-h-[130px] mb-4",
-            showValidationError && formData.signature_image === ""
-              ? "border-red-500"
-              : "border-gray-300",
-          )}`}
-          ref={containerRef as unknown as React.RefObject<HTMLDivElement>}
-        >
-          <SignatureCanvas
-            penColor="#26aae1"
-            canvasProps={{
-              width: width,
-              height: "200px",
-              className: "sigCanvas",
-            }}
-            onEnd={() => {
-              const base64 = sigCanvas.current?.toDataURL();
-              if (base64) {
-                dispatch(
-                  updateField({
-                    field: "signature_image",
-                    value: base64 as string,
-                  }),
-                );
+        <div className={withPrefix("mt-4")}>
+          <fieldset>
+            <legend className={withPrefix("font-bold mb-2")}>
+              Signature method
+            </legend>
+            <div className={withPrefix("flex gap-4 text-sm")}>
+              <label className={withPrefix("inline-flex items-center gap-2")}>
+                <input
+                  type="radio"
+                  name="signature-method"
+                  value="draw"
+                  checked={signatureMethod === "draw"}
+                  onChange={() => {
+                    setSignatureMethod("draw");
+                    dispatch(
+                      updateField({ field: "signature_method", value: "draw" }),
+                    );
+                    dispatch(
+                      updateField({ field: "signature_text", value: "" }),
+                    );
+                  }}
+                />
+                Draw signature
+              </label>
+              <label className={withPrefix("inline-flex items-center gap-2")}>
+                <input
+                  type="radio"
+                  name="signature-method"
+                  value="type"
+                  checked={signatureMethod === "type"}
+                  onChange={() => {
+                    setSignatureMethod("type");
+                    dispatch(
+                      updateField({ field: "signature_method", value: "type" }),
+                    );
+                    sigCanvas.current?.clear();
+                    dispatch(
+                      updateField({ field: "signature_image", value: "" }),
+                    );
+                  }}
+                />
+                Type signature
+              </label>
+            </div>
+          </fieldset>
+        </div>
+
+        {signatureMethod === "type" && (
+          <div className={withPrefix("mt-4")}>
+            <label
+              htmlFor="typed-signature"
+              className={withPrefix("font-bold")}
+            >
+              Typed Signature
+            </label>
+            <WrappedInput
+              id="typed-signature"
+              showSearch={false}
+              invalid={
+                showValidationError &&
+                !formData.signature_text &&
+                formData.signature_image === ""
               }
-            }}
-            ref={sigCanvas}
-          />
-        </div>
-        <Button color="white" onClick={clearForm}>
-          Clear
-        </Button>
+              type="text"
+              name="typed-signature"
+              placeholder="Type your full name"
+              value={formData.signature_text || ""}
+              onChange={(value: string) => {
+                dispatch(updateField({ field: "signature_text", value }));
+              }}
+              clearAction={() => {
+                dispatch(updateField({ field: "signature_text", value: "" }));
+              }}
+            />
+          </div>
+        )}
 
-        {formData.has_secondary_occupant === "true" && (
+        {signatureMethod === "draw" && (
           <>
-            <h1 className={withPrefix("font-bold mb-2 mt-4")}>
-              Signature of Secondary Account Holder
-            </h1>
+            <p
+              id="signature-instructions"
+              className={withPrefix("mt-4 text-sm text-gray-600")}
+            >
+              Draw your signature using a mouse, trackpad, or touch.
+            </p>
             <div
               className={`${
-                formData.secondary_signature_image === "" ? "sig-canvas" : ""
+                formData.signature_image === "" ? "sig-canvas" : ""
               } ${withPrefix(
                 "border-1 rounded p-4 mt-4 w-full h-full min-h-[130px] mb-4",
-                showValidationError && formData.secondary_signature_image === ""
-                  ? "border-red-500"
+                showValidationError &&
+                  formData.signature_image === "" &&
+                  !formData.signature_text
+                  ? "border-(--validation-error-color)"
                   : "border-gray-300",
               )}`}
+              ref={containerRef as unknown as React.RefObject<HTMLDivElement>}
             >
               <SignatureCanvas
                 penColor="#26aae1"
                 canvasProps={{
                   width: width,
                   height: "200px",
-                  className: "sigCanvas2",
+                  className: "sigCanvas",
+                  "aria-describedby": "signature-instructions",
                 }}
                 onEnd={() => {
-                  const base64 = sigCanvas2.current?.toDataURL();
+                  const base64 = sigCanvas.current?.toDataURL();
                   if (base64) {
                     dispatch(
                       updateField({
-                        field: "secondary_signature_image",
+                        field: "signature_image",
                         value: base64 as string,
                       }),
                     );
                   }
                 }}
-                ref={sigCanvas2}
+                ref={sigCanvas}
               />
             </div>
-            <Button color="white" onClick={clearForm}>
+            <Button
+              color="white"
+              onClick={clearForm}
+              aria-label="Clear Primary Signature"
+            >
               Clear
             </Button>
+          </>
+        )}
+
+        {formData.has_secondary_occupant === "true" && (
+          <>
+            <h3 className={withPrefix("font-bold mb-2 mt-4")}>
+              Signature of Secondary Account Holder
+            </h3>
+            <fieldset>
+              <legend className={withPrefix("font-bold mb-2")}>
+                Secondary signature method
+              </legend>
+              <div className={withPrefix("flex gap-4 text-sm")}>
+                <label className={withPrefix("inline-flex items-center gap-2")}>
+                  <input
+                    type="radio"
+                    name="secondary-signature-method"
+                    value="draw"
+                    checked={secondarySignatureMethod === "draw"}
+                    onChange={() => {
+                      setSecondarySignatureMethod("draw");
+                      dispatch(
+                        updateField({
+                          field: "secondary_signature_method",
+                          value: "draw",
+                        }),
+                      );
+                      dispatch(
+                        updateField({
+                          field: "secondary_signature_text",
+                          value: "",
+                        }),
+                      );
+                    }}
+                  />
+                  Draw signature
+                </label>
+                <label className={withPrefix("inline-flex items-center gap-2")}>
+                  <input
+                    type="radio"
+                    name="secondary-signature-method"
+                    value="type"
+                    checked={secondarySignatureMethod === "type"}
+                    onChange={() => {
+                      setSecondarySignatureMethod("type");
+                      dispatch(
+                        updateField({
+                          field: "secondary_signature_method",
+                          value: "type",
+                        }),
+                      );
+                      sigCanvas2.current?.clear();
+                      dispatch(
+                        updateField({
+                          field: "secondary_signature_image",
+                          value: "",
+                        }),
+                      );
+                    }}
+                  />
+                  Type signature
+                </label>
+              </div>
+            </fieldset>
+
+            {secondarySignatureMethod === "type" && (
+              <div className={withPrefix("mt-4")}>
+                <label
+                  htmlFor="typed-secondary-signature"
+                  className={withPrefix("font-bold")}
+                >
+                  Typed Secondary Signature
+                </label>
+                <WrappedInput
+                  id="typed-secondary-signature"
+                  showSearch={false}
+                  invalid={
+                    showValidationError &&
+                    !formData.secondary_signature_text &&
+                    formData.secondary_signature_image === ""
+                  }
+                  type="text"
+                  name="typed-secondary-signature"
+                  placeholder="Type full name"
+                  value={formData.secondary_signature_text || ""}
+                  onChange={(value: string) => {
+                    dispatch(
+                      updateField({
+                        field: "secondary_signature_text",
+                        value,
+                      }),
+                    );
+                  }}
+                  clearAction={() => {
+                    dispatch(
+                      updateField({
+                        field: "secondary_signature_text",
+                        value: "",
+                      }),
+                    );
+                  }}
+                />
+              </div>
+            )}
+
+            {secondarySignatureMethod === "draw" && (
+              <>
+                <p
+                  id="secondary-signature-instructions"
+                  className={withPrefix("mt-4 text-sm text-gray-600")}
+                >
+                  Draw the secondary signature using a mouse, trackpad, or
+                  touch.
+                </p>
+                <div
+                  className={`${
+                    formData.secondary_signature_image === ""
+                      ? "sig-canvas"
+                      : ""
+                  } ${withPrefix(
+                    "border-1 rounded p-4 mt-4 w-full h-full min-h-[130px] mb-4",
+                    showValidationError &&
+                      formData.secondary_signature_image === "" &&
+                      !formData.secondary_signature_text
+                      ? "border-(--validation-error-color)"
+                      : "border-gray-300",
+                  )}`}
+                >
+                  <SignatureCanvas
+                    penColor="#26aae1"
+                    canvasProps={{
+                      width: width,
+                      height: "200px",
+                      className: "sigCanvas2",
+                      "aria-describedby": "secondary-signature-instructions",
+                    }}
+                    onEnd={() => {
+                      const base64 = sigCanvas2.current?.toDataURL();
+                      if (base64) {
+                        dispatch(
+                          updateField({
+                            field: "secondary_signature_image",
+                            value: base64 as string,
+                          }),
+                        );
+                      }
+                    }}
+                    ref={sigCanvas2}
+                  />
+                </div>
+                <Button
+                  color="white"
+                  onClick={clearForm2}
+                  aria-label="Clear Secondary Signature"
+                >
+                  Clear
+                </Button>
+              </>
+            )}
           </>
         )}
 
@@ -162,14 +413,14 @@ function FormPage8() {
           className={withPrefix(
             "border-1 rounded-md pf:overflow-hidden p-2 mt-4",
             showValidationError && formData.verify_entered_information === ""
-              ? "border-red-500"
+              ? "border-(--validation-error-color)"
               : "border-transparent",
           )}
         >
-          <Checkbox
+          <FormCheckbox
             color="green"
-            name="verify_entered_information"
             value={formData.verify_entered_information}
+            name="verify_entered_information"
             checked={formData.verify_entered_information == "true"}
             onChange={(checked) => {
               dispatch(
@@ -179,13 +430,19 @@ function FormPage8() {
                 }),
               );
             }}
-          />{" "}
-          I verify that all information entered is correct
+          />
+          <Label className={withPrefix("!font-bold")}>
+            I verify that all information entered is correct
+          </Label>
         </CheckboxField>
-      </div>
+      </main>
 
       <div className={withPrefix("mt-4")}>
-        <AllFieldsRequiredMessage show={showValidationError} id="/page8" />
+        <AllFieldsRequiredMessage
+          show={showValidationError}
+          id="/page8"
+          announceKey={announceKey}
+        />
         <FooterWrapper>
           <NavButton
             label="Submit"
@@ -194,6 +451,7 @@ function FormPage8() {
                 navigate("/form_page9");
               } else {
                 setShowValidationError(true);
+                setAnnounceKey((current) => current + 1);
               }
             }}
             currentPage="page8"

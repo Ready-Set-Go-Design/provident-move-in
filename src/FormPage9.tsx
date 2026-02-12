@@ -60,7 +60,7 @@ function FormPage9() {
   if (!submitted && !error) {
     return (
       <div className={withPrefix("p-4 w-full max-w-[400px] m-auto pb-24")}>
-        <h1 className={withPrefix("py-4 text-2xl")}>Submitting Agreement...</h1>
+        <h2 className={withPrefix("py-4 text-2xl")}>Submitting Agreement...</h2>
       </div>
     );
   }
@@ -68,13 +68,15 @@ function FormPage9() {
   if (!submitted && error) {
     return (
       <div className={withPrefix("p-4 w-full max-w-[400px] m-auto pb-24")}>
-        <h1 className={withPrefix("py-4 text-2xl")}>Submission Error</h1>
-        <div className={withPrefix("mb-4")}>
-          <div className={withPrefix("mt-4 mb-4")}>
-            There was a problem submitting your agreement. Please go back and
-            try again.
+        <h2 className={withPrefix("py-4 text-2xl")}>Submission Error</h2>
+        <main>
+          <div className={withPrefix("mb-4")}>
+            <div className={withPrefix("mt-4 mb-4")}>
+              There was a problem submitting your agreement. Please go back and
+              try again.
+            </div>
           </div>
-        </div>
+        </main>
         <div className={withPrefix("mt-8 flex")}>
           <FooterWrapper>
             <NavButton
@@ -95,12 +97,12 @@ function FormPage9() {
 
   return (
     <div className={withPrefix("p-4 w-full max-w-[400px] m-auto pb-24")}>
-      <h1 className={withPrefix("py-4 text-2xl")}>Submission Complete</h1>
+      <h2 className={withPrefix("py-4 text-2xl")}>Submission Complete</h2>
       <div className={withPrefix("mb-4")}>
-        <h1>
+        <div>
           Thanks for completing the Customer Service Agreement with Provident
           Energy Management Inc.
-        </h1>
+        </div>
         <div className={withPrefix("mb-4 mt-4")}>
           A copy of this contract will be sent to{" "}
           <strong>{formData.email}</strong>.

@@ -6,14 +6,13 @@ import { withPrefix } from "../utils/withPrefix";
 function NavButton({
   action,
   label,
-  disabled,
   outline,
   currentPage,
   disabledButClickable,
 }: {
   action: Function;
   label: string;
-  disabled?: boolean;
+
   currentPage?: string;
   outline?: boolean;
   fullWidth?: string;
@@ -23,13 +22,11 @@ function NavButton({
 
   return (
     <Button
-      disabled={disabled}
-      color={disabledButClickable ? "disabled" : "brand"}
+      color={"brand"}
       {...((outline as any) && { outline })}
       onClick={() => {
         action();
         if (disabledButClickable) {
-          console.log("trying!");
           setTimeout(() => {
             window.scrollTo({
               top: document.body.scrollHeight,

@@ -1,4 +1,3 @@
-import { replace } from "lodash";
 import { FormState } from "../store/formSlice";
 import humanizeString from "./humanizeFieldName";
 import { validationRequirements } from "./validationRequirements";
@@ -9,7 +8,9 @@ export const validateForm = (formData: FormState) => {
       { replace: "selected_unit", with: "suite_or_unit_number" },
       { replace: "selected_address", with: "address" },
       { replace: "signature_image" },
+      { replace: "signature_text", with: "signature" },
       { replace: "secondary_signature_image" },
+      { replace: "secondary_signature_text", with: "secondary signature" },
     ];
 
     const substitution = source.find(
@@ -26,6 +27,19 @@ export const validateForm = (formData: FormState) => {
     requirement.fields.forEach((field: any) => {
       if (field.conditional) {
         if (formData[field.conditional] === field.value) {
+          if (
+            requirement.id === "/page8" &&
+            field.id === "secondary_signature_image"
+          ) {
+            const secondarySignaturePresent =
+              (formData.secondary_signature_image as string) > "" ||
+              (formData.secondary_signature_text as string) > "";
+            if (!secondarySignaturePresent) {
+              fieldErrors.push("secondary_signature");
+              allFieldsValid = false;
+            }
+            return;
+          }
           const present =
             field &&
             field.id &&
@@ -85,6 +99,16 @@ export const validateForm = (formData: FormState) => {
           allFieldsValid = false;
         }
       } else {
+        if (requirement.id === "/page8" && field.name === "signature_image") {
+          const signaturePresent =
+            (formData.signature_image as string) > "" ||
+            (formData.signature_text as string) > "";
+          if (!signaturePresent) {
+            fieldErrors.push("signature");
+            allFieldsValid = false;
+          }
+          return;
+        }
         if (
           !formData[field.name] ||
           (formData[field.name] &&
