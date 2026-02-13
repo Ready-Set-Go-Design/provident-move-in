@@ -80,7 +80,7 @@ export const validateForm = (formData: FormState) => {
                 break;
               case "phone":
                 const phoneRegex =
-                  /^(\+\d{1,2}\s?)?\(?\d{3}\)?[\s.-]?\d{3}[\s.-]?\d{4}$/;
+                  /^(\+?\d{1,2}\s?)?\(?\d{3}\)?[\s.-]?\d{3}[\s.-]?\d{4}$/;
                 if (!phoneRegex.test(formData[field.id] as string)) {
                   fieldErrors.push(field.id);
                   allFieldsValid = false;
@@ -129,7 +129,7 @@ export const validateForm = (formData: FormState) => {
                 break;
               case "phone":
                 const phoneRegex =
-                  /^(\+\d{1,2}\s?)?\(?\d{3}\)?[\s.-]?\d{3}[\s.-]?\d{4}$/;
+                  /^(\+?\d{1,2}\s?)?\(?\d{3}\)?[\s.-]?\d{3}[\s.-]?\d{4}$/;
                 if (!phoneRegex.test(formData[field.name] as string)) {
                   fieldErrors.push(field.name);
                   allFieldsValid = false;

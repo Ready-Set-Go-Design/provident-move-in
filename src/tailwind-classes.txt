@@ -191,6 +191,7 @@ pf:image/png
 pf:canvas
 pf:void_cheque_image
 pf:max-w-full
+pf:Uploaded
 pf:object-contain
 pf:justify-end
 pf:page5
@@ -1420,6 +1421,13 @@ pf:max-w-3xl
 pf:max-w-4xl
 pf:max-w-5xl
 pf:md
+pf:undefined
+pf:[data-headlessui-focus-guard]
+pf:`Focus
+pf:guard
+pf:${index
+pf:+
+pf:1}`
 pf:bg-zinc-950/15
 pf:grid-rows-[1fr_auto_1fr]
 pf:p-8
